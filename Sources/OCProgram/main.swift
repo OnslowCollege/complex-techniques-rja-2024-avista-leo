@@ -96,3 +96,5 @@ struct Cart: CustomStringConvertible {
         }
     }
 }
+
+print("Hello")
