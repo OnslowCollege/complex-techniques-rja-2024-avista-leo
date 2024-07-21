@@ -96,3 +96,12 @@ struct Cart: CustomStringConvertible {
         }
     }
 }
+
+/// start of GUI Program
+class SalesWebsiteGUIProgram: OCApp {    
+    // GUI controls for program
+    let catalogueListView = OCListView()
+    let priceTag = OCLabel("")
+    let addToCartButton = OCButton("Add to Cart")
+
+}
