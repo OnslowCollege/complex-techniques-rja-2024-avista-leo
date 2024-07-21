@@ -8,7 +8,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/OnslowCollege/OCGUI.git", .exact("0.0.7"))
+        .package(url: "https://github.com/OnslowCollege/OCGUI.git", .exact("0.0.7")),
+        .package(url: "https://github.com/dehesa/CodableCSV.git", from: "0.6.7")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -17,12 +18,12 @@ let package = Package(
             name: "OCProgram",
             dependencies: [
                 // .product(name: "package", package: "package")
-                .product(name: "OCGUI", package: "OCGUI")
-                .package(url: "https://github.com/dehesa/CodableCSV.git", from: "0.6.7")
+                .product(name: "OCGUI", package: "OCGUI"),
+                .product(name: "CodableCSV", package: "CodableCSV")
             ],
             swiftSettings: [
                 .enableUpcomingFeature("BareSlashRegexLiterals")
-                .product(name: "CodableCSV", package: "CodableCSV")
+                
             ]
         )
     ]

@@ -7,9 +7,9 @@
                 "swift"
             ],
             "name": "Debug OCProgram",
-            "program": "${workspaceFolder:SwiftTemplate}/.build/debug/OCProgram",
+            "program": "${workspaceFolder:complex-techniques-rja-2024-avista-leo-1}/.build/debug/OCProgram",
             "args": [],
-            "cwd": "${workspaceFolder:SwiftTemplate}",
+            "cwd": "${workspaceFolder:complex-techniques-rja-2024-avista-leo-1}",
             "preLaunchTask": "swift: Build Debug OCProgram"
         },
         {
@@ -19,9 +19,9 @@
                 "swift"
             ],
             "name": "Release OCProgram",
-            "program": "${workspaceFolder:SwiftTemplate}/.build/release/OCProgram",
+            "program": "${workspaceFolder:complex-techniques-rja-2024-avista-leo-1}/.build/release/OCProgram",
             "args": [],
-            "cwd": "${workspaceFolder:SwiftTemplate}",
+            "cwd": "${workspaceFolder:complex-techniques-rja-2024-avista-leo-1}",
             "preLaunchTask": "swift: Build Release OCProgram"
         }
     ]
