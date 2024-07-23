@@ -4,7 +4,6 @@
 // Founded on 23/06/2024
 
 import Foundation
-import CodableCSV
 import OCGUI
 
 /// An error thrown by this program.
@@ -105,3 +104,4 @@ class SalesWebsiteGUIProgram: OCApp {
     let addToCartButton = OCButton("Add to Cart")
 
 }
+print("Hello")
