@@ -46,8 +46,8 @@
                         {
                             "cwd": "${workspaceFolder}",
                             "name": "$(run) Run file",
-                            "singleInstance": true,
-                            "command": "swift sh ${file}" // This is executed in the terminal.
+                            "useVsCodeApi": true,
+                            "command": "workbench.action.debug.start" // This is executed in the terminal.
                         },
                         {
                             "cwd": "{workspaceFolder}",

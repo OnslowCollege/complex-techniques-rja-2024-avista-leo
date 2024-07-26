@@ -5,6 +5,7 @@
 
 import Foundation
 import OCGUI
+import CodableCSV
 
 /// An error thrown by this program.
 struct WebError : Error {
@@ -42,8 +43,14 @@ struct CatalogueItem: Codable, CustomStringConvertible {
             self.itemPrice = itemPrice
             // if itemPrice is invalid, give the user a warning
         } else {
-            throw WebError(warning: "Sorry we do not give out any items for free nor do we pay customers to take our items.")
+            throw WebError(message: "Sorry we do not give out any items for free nor do we pay customers to take our items.")
         }
+    }
+
+    // Conformance to Codable.
+    enum CodingKeys : Int, CodingKey {
+        case itemName = 0
+        case itemPrice = 1
     }
 
     /// Catalogue Item's price as a string formatted in NZD
@@ -56,6 +63,7 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     var itemDescription: String {
         return "\(self.itemName) .......... \(self.priceDescription)"
     }
+
 }
 
 /// A catalogue of items avalaible for sale on the website
@@ -69,7 +77,7 @@ struct Catalogue: CustomStringConvertible {
             self.availableItems = availableItems
         } else {
             // If there are 0 items on the catalogue, throw an error
-            throw WebError(warning: "Catalogue requires at least one item for sale.")
+            throw WebError(message: "Catalogue requires at least one item for sale.")
         }
     }
 }
@@ -77,7 +85,7 @@ struct Catalogue: CustomStringConvertible {
 /// items user will order from the Catalogue
 struct Cart: CustomStringConvertible {
     /// our decided max limit of items user is allowed to order in one order.
-    static let CartLimit: Int = 5
+    let CartLimit: Int = 5
 
     /// The user's items. Items will be added to/removed from it.
     var userItems: [CatalogueItem] = []
@@ -89,7 +97,7 @@ struct Cart: CustomStringConvertible {
     ///   - fromCatalogue: catalogue to find item.
     mutating func add(itemX name: String, fromCatalogue catalogue: Catalogue) throws {
         // Check that cart has not reached max limit
-        guard self.userItems.count != Cart.CartLimit else {
+        guard self.userItems.count != CartLimit else {
             // If cart has reached max limit, throw error.
             throw WebError(message: "Sorry, cart is full.")
         }
@@ -100,8 +108,8 @@ struct Cart: CustomStringConvertible {
 class SalesWebsiteGUIProgram: OCApp {    
     // GUI controls for program
     let catalogueListView = OCListView()
-    let priceTag = OCLabel("")
-    let addToCartButton = OCButton("Add to Cart")
+    let priceTag = OCLabel(text: "")
+    let addToCartButton = OCButton(text: "Add to Cart")
 
 }
 print("Hello")
