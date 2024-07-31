@@ -117,7 +117,7 @@ struct Menu : CustomStringConvertible {
 
 
 /// The items that the user will order.
-struct Cart : CustomStringConvertible {
+struct DCart : CustomStringConvertible {
     /// The maximum number of items allowed in the cart.
     static let maximumItemCount: Int = 5
 

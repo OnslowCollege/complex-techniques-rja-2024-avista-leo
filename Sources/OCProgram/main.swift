@@ -15,6 +15,10 @@ struct WebError : Error {
 
 /// An item on the catalogue
 struct CatalogueItem: Codable, CustomStringConvertible {
+    var description: String {
+        return self.itemDescription
+    }
+
     /// minimum price allowed for an item in the catalogue
     static let minPrice: Double = 0.01
 
@@ -68,6 +72,8 @@ struct CatalogueItem: Codable, CustomStringConvertible {
 
 /// A catalogue of items avalaible for sale on the website
 struct Catalogue: CustomStringConvertible {
+    var description: String
+
     /// items available to purchase for the user
     let availableItems: [CatalogueItem]
 
@@ -84,6 +90,8 @@ struct Catalogue: CustomStringConvertible {
 
 /// items user will order from the Catalogue
 struct Cart: CustomStringConvertible {
+    var description: String
+
     /// our decided max limit of items user is allowed to order in one order.
     let CartLimit: Int = 5
 
