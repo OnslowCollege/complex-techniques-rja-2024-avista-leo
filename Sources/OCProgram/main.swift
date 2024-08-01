@@ -15,10 +15,6 @@ struct WebError : Error {
 
 /// An item on the catalogue
 struct CatalogueItem: Codable, CustomStringConvertible {
-    var description: String {
-        return self.itemDescription
-    }
-
     /// minimum price allowed for an item in the catalogue
     static let minPrice: Double = 0.01
 
@@ -68,12 +64,14 @@ struct CatalogueItem: Codable, CustomStringConvertible {
         return "\(self.itemName) .......... \(self.priceDescription)"
     }
 
+    var description: String {
+        return self.itemDescription
+    }
+
 }
 
 /// A catalogue of items avalaible for sale on the website
 struct Catalogue: CustomStringConvertible {
-    var description: String
-
     /// items available to purchase for the user
     let availableItems: [CatalogueItem]
 
@@ -86,29 +84,103 @@ struct Catalogue: CustomStringConvertible {
             throw WebError(message: "Catalogue requires at least one item for sale.")
         }
     }
+
+    /// Search for an item by name in the catalogue.
+    /// 
+    /// - Parameters:
+    ///   - NameToSearch: Name of Catalogue item to search for.
+    /// 
+    /// - Returns: availableItem (items available to purchase for the user), otherwise nil
+    func FindItem(NameToSearch itemName: String) -> CatalogueItem? {
+        // Find the first matching item in the array.
+        return self.availableItems.first(where: { $0.itemName.lowercased() == itemName.lowercased() })
+    }
+
+    /// Conformance to CustomStringConvertible.
+    var description: String {
+        // Create a string builder.
+        var builder: String = "MENU\n"
+
+        // Enumerate Catalogue to get Catalogue Item indices, then plus one.
+        for (index, availableItem) in self.availableItems.enumerated() {
+            builder = builder + "\(index + 1). \(availableItem)\n"
+        }
+        return builder
+    }
 }
+
 
 /// items user will order from the Catalogue
 struct Cart: CustomStringConvertible {
-    var description: String
-
     /// our decided max limit of items user is allowed to order in one order.
     let CartLimit: Int = 5
 
     /// The user's items. Items will be added to/removed from it.
     var userItems: [CatalogueItem] = []
 
+    /// Get cart's total price as string formatted for NZD.
+    var totalPriceString: String {
+        // Calculate price of ALL items in cart.
+        var GrandTotal: Double = 0.0
+        for item in self.userItems {
+            GrandTotal = GrandTotal + item.itemPrice
+        }
+
+        let TotalString: String = String(format: "%.2f", GrandTotal)
+        return "$\(TotalString)"
+    }
+
     /// User to add item to cart, as long as cart hasn't reached max limit
     /// 
     /// - Parameters:
     ///   - itemX: name of item to search for + add (if possible).
     ///   - fromCatalogue: catalogue to find item.
-    mutating func add(itemX name: String, fromCatalogue catalogue: Catalogue) throws {
+    mutating func addItem(itemX name: String, fromCatalogue catalogue: Catalogue) throws {
         // Check that cart has not reached max limit
         guard self.userItems.count != CartLimit else {
             // If cart has reached max limit, throw error.
             throw WebError(message: "Sorry, cart is full.")
         }
+
+        // Search for item in catalogue
+        guard let item = catalogue.FindItem(NameToSearch: name) else {
+            // If no item found, throw WebError.
+            throw WebError(message: "No such item '\(name)' found in catalogue.")
+        }
+
+        // Otherwise, add item to cart.
+        self.userItems.append(item)
+    }
+
+    /// Remove item from cart, if it exists in cart.
+    /// 
+    /// - Parameters:
+    ///   - RemoveItemName: name of item to search for + remove (if possible).
+    mutating func removeItem(RemoveItemName name: String) throws {
+        // Search for item's index.
+        guard let removeitemIndex = self.userItems.firstIndex(where: { $0.itemName.lowercased() == name.lowercased() }) else {
+            // If no item could be found, throw an error.
+            throw WebError(message: "No such item '\(name)' found in cart.")
+        }
+
+        // Remove the found item.
+        self.userItems.remove(at: removeitemIndex)
+    }
+
+    /// Conformance to CustomStringConvertible.
+    var description: String {
+        // Create a string builder.
+        var builder: String = "CART\n"
+
+        // Enumerate menu to get item indices, then plus one.
+        for (index, availableItem) in self.userItems.enumerated() {
+            builder = builder + "\(index + 1). \(availableItem)\n"
+        }
+
+        // Add the total price.
+        builder = builder + "TOTAL: \(self.totalPriceString)\n"
+
+        return builder
     }
 }
 
@@ -120,4 +192,5 @@ class SalesWebsiteGUIProgram: OCApp {
     let addToCartButton = OCButton(text: "Add to Cart")
 
 }
+
 print("Hello")
