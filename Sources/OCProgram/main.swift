@@ -72,7 +72,7 @@ struct CatalogueItem: Codable, CustomStringConvertible {
 
 /// A catalogue of items avalaible for sale on the website
 struct Catalogue: CustomStringConvertible {
-    var description: String
+    var description: String { return self.availableItems.description }
 
     /// items available to purchase for the user
     let availableItems: [CatalogueItem]
@@ -118,6 +118,11 @@ class SalesWebsiteGUIProgram: OCApp {
     let catalogueListView = OCListView()
     let priceTag = OCLabel(text: "")
     let addToCartButton = OCButton(text: "Add to Cart")
-
+    
+    public override func main(app: any OCAppDelegate) -> OCControl {
+        return addToCartButton
+    }
 }
 print("Hello")
+
+SalesWebsiteGUIProgram().start()
