@@ -163,13 +163,13 @@ struct Cart: CustomStringConvertible {
             throw WebError(message: "No such item '\(name)' found in cart.")
         }
 
-        // Remove the found item.
+        // Remove found item.
         self.userItems.remove(at: removeitemIndex)
     }
 
     /// Conformance to CustomStringConvertible.
     var description: String {
-        // Create a string builder.
+        // Create string builder.
         var builder: String = "CART\n"
 
         // Enumerate menu to get item indices, then plus one.
@@ -179,18 +179,25 @@ struct Cart: CustomStringConvertible {
 
         // Add the total price.
         builder = builder + "TOTAL: \(self.totalPriceString)\n"
-
         return builder
     }
 }
 
 /// start of GUI Program
-class SalesWebsiteGUIProgram: OCApp {    
+class SalesWebsiteGUIProgram: OCApp {
+
+    // Catalogue from where user selects items to order
+    var catalogue: Catalogue? = nil
+
+    /// User's cart. It begins empty.
+    var cart: Cart = Cart()
+
     // GUI controls for program
     let catalogueListView = OCListView()
     let priceTag = OCLabel(text: "")
     let addToCartButton = OCButton(text: "Add to Cart")
+    let cartItemsVBox = OCVBox(controls: [])
+    let cartPriceLabel = OCLabel(text: "")
 
 }
 
-print("Hello")
