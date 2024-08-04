@@ -70,7 +70,7 @@ struct CatalogueItem: Codable, CustomStringConvertible {
 
 }
 
-/// A catalogue of items avalaible for sale on the website
+/// A catalogue of items avalaible for sale on the website0
 struct Catalogue: CustomStringConvertible {
     /// items available to purchase for the user
     let availableItems: [CatalogueItem]
@@ -199,5 +199,132 @@ class SalesWebsiteGUIProgram: OCApp {
     let cartItemsVBox = OCVBox(controls: [])
     let cartPriceLabel = OCLabel(text: "")
 
-}
+    // Track remove buttons.
+    var totalRemoveButtons: [OCButton] = []
 
+    /// Update labels when new catalogue item is selected by user.
+    func onCatalogueListViewChange(listView: any OCControlChangeable, selected: OCListItem) {
+        // Get item from catalogue.
+        guard let item: CatalogueItem = self.catalogue!.FindItem(NameToSearch: selected.text) else {
+            // If no item can be loaded, do nothing.
+            return
+        }
+
+        // Otherwise, update labels.
+        self.priceTag.text = item.priceDescription
+    }
+
+    /// Recreate items VBox when anything is added or removed.
+    func resetItemsVBox() {
+        // Reset GUI.
+        self.cartItemsVBox.empty()
+        self.totalRemoveButtons = []
+
+        for item in self.cart.userItems {
+            // Label and the remove button for cart item.
+            let label = OCLabel(text: item.itemName)
+            let buttonRemove = OCButton(text: "➖")
+            buttonRemove.onClick(self.onRemoveButtonClick)
+            self.totalRemoveButtons.append(buttonRemove)
+
+            // Add cart item with controls side by side.
+            let cartItemHBox = OCHBox(controls: [label, buttonRemove])
+            cartItemHBox.width = OCSize.percent(100)
+            cartItemHBox.height = OCSize.pixels(50)
+            self.cartItemsVBox.append(control: cartItemHBox)
+        }
+
+        // Add cart's total price to GUI.
+        self.cartPriceLabel.text = self.cart.totalPriceString
+    }
+
+    /// Add selected item to cart.
+    func onAddToCartButtonClick(button: any OCControlClickable) {
+        // Check a selection has been made by user.
+        guard let selected = self.catalogueListView.selectedItem else {
+            // If an item hasn't been selected by user, do nothing.
+            return
+        }
+
+        let itemName: String = selected.text
+
+        // Add item to cart.
+        do {
+            try self.cart.addItem(itemX: itemName, fromCatalogue: self.catalogue!)
+            // Add the item to the GUI.
+            self.resetItemsVBox()
+            OCDialog(title: "Success", message: "Added \(itemName)!", app: self).show()
+            // If item not successfully added, throw WebError to user.
+        } catch {
+            if let error = error as? WebError {
+                OCDialog(title: "Add error", message: error.message, app: self).show()
+            }
+        }
+    }
+
+    /// Remove an item from user's cart.
+    func onRemoveButtonClick(button: any OCControlClickable) {
+        do {
+            let button = button as! OCButton
+            let index = self.totalRemoveButtons.firstIndex(where: { $0.pythonObject == button.pythonObject })!
+            try self.cart.removeItem(RemoveItemName: self.cart.userItems[index].itemName)
+
+            // Remove item from GUI.
+            self.resetItemsVBox()
+        } catch {
+            if let error = error as? WebError {
+                OCDialog(title: "Remove error", message: error.message, app: self).show()
+            }
+        }
+    }
+
+    /// Main method.
+    override open func main(app: any OCAppDelegate) -> OCControl {
+        // Load the menus.
+        let decoder: CSVDecoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
+
+        // Read in the food menu.
+        guard let foodText = try? String(contentsOfFile: "food_menu.txt"),
+        let foodItems = try? decoder.decode([MenuItem].self, from: foodText) else {
+            print("Cannot load food.")
+            exit(0)
+        }
+
+        // Read in the drinks menu.
+        guard let drinksText = try? String(contentsOfFile: "drinks_menu.txt"),
+        let drinksItems = try? decoder.decode([MenuItem].self, from: drinksText) else {
+            print("Cannot load drinks.")
+            exit(0)
+        }
+
+        // Set the menu.
+        guard let menu = try? Menu(items: foodItems + drinksItems) else {
+            print("Cannot create menu.")
+            exit(0)
+        }
+        self.menu = menu
+
+        // Set up control widths.
+        self.menuListView.width = OCSize.percent(100)
+        self.cartItemsVBox.width = OCSize.percent(100)
+
+        // Set control states.
+        self.placeOrderButton.enabled = false
+
+        // Add menu items to menu list view.
+        for item in self.menu!.items {
+            self.menuListView.append(item: item.name)
+        }
+
+        // Set up event methods.
+        self.menuListView.onChange(self.onMenuListViewChange)
+        self.addToOrderButton.onClick(self.onAddToOrderButtonClick)
+        self.placeOrderButton.onClick(self.onPlaceOrderButtonClick)
+
+        // Set up the layout.
+        let menuVBox = OCVBox(controls: [self.menuListView, self.priceLabel, self.veganLabel, self.addToOrderButton])
+        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.placeOrderButton])
+        return OCHBox(controls: [menuVBox, cartVBox])
+    }
+}
+SalesWebsiteGUIProgram().start()
