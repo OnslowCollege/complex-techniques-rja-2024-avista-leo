@@ -283,47 +283,37 @@ class SalesWebsiteGUIProgram: OCApp {
         // Load the menus.
         let decoder: CSVDecoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
 
-        // Read in the food menu.
-        guard let foodText = try? String(contentsOfFile: "food_menu.txt"),
-        let foodItems = try? decoder.decode([MenuItem].self, from: foodText) else {
-            print("Cannot load food.")
+        // Read in the catalogue.
+        guard let catalogueText = try? String(contentsOfFile: "catalogueItems.txt"),
+        let catalogueItems = try? decoder.decode([CatalogueItem].self, from: catalogueText) else {
+            print("Cannot load catalogue.")
             exit(0)
         }
 
-        // Read in the drinks menu.
-        guard let drinksText = try? String(contentsOfFile: "drinks_menu.txt"),
-        let drinksItems = try? decoder.decode([MenuItem].self, from: drinksText) else {
-            print("Cannot load drinks.")
-            exit(0)
-        }
-
-        // Set the menu.
-        guard let menu = try? Menu(items: foodItems + drinksItems) else {
+        // Set menu.
+        guard let menu = try? Catalogue(availableItems: catalogueItems) else {
             print("Cannot create menu.")
             exit(0)
         }
-        self.menu = menu
+        self.catalogue = menu
+
 
         // Set up control widths.
-        self.menuListView.width = OCSize.percent(100)
+        self.catalogueListView.width = OCSize.percent(100)
         self.cartItemsVBox.width = OCSize.percent(100)
 
-        // Set control states.
-        self.placeOrderButton.enabled = false
-
-        // Add menu items to menu list view.
-        for item in self.menu!.items {
-            self.menuListView.append(item: item.name)
+        // Add catalogue items to catalogue list view.
+        for item in self.catalogue!.availableItems {
+            self.catalogueListView.append(item: item.itemName)
         }
 
         // Set up event methods.
-        self.menuListView.onChange(self.onMenuListViewChange)
-        self.addToOrderButton.onClick(self.onAddToOrderButtonClick)
-        self.placeOrderButton.onClick(self.onPlaceOrderButtonClick)
+        self.catalogueListView.onChange(self.onCatalogueListViewChange)
+        self.addToCartButton.onClick(self.onAddToCartButtonClick)
 
-        // Set up the layout.
-        let menuVBox = OCVBox(controls: [self.menuListView, self.priceLabel, self.veganLabel, self.addToOrderButton])
-        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.placeOrderButton])
+        // Set up layout.
+        let menuVBox = OCVBox(controls: [self.catalogueListView, self.cartPriceLabel, self.addToCartButton])
+        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel])
         return OCHBox(controls: [menuVBox, cartVBox])
     }
 }

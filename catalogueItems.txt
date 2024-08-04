@@ -1,0 +1,5 @@
+name,price
+socks,10.0
+hoodies,50.0
+pants,80.0
+shirts,30.0
