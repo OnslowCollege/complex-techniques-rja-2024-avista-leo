@@ -84,6 +84,7 @@ struct Catalogue: CustomStringConvertible {
             throw WebError(message: "Catalogue requires at least one item for sale.")
         }
     }
+
 /// Search for an item by name in the catalogue.
 ///
 /// - Parameters:
@@ -95,38 +96,40 @@ func FindItem(NameToSearch itemName: String) -> CatalogueItem? {
     return self.availableItems.first(where: { $0.itemName.lowercased() == itemName.lowercased() })
 }
 
-/// Conformance to CustomStringConvertible.
-var description: String {
-    // Create a string builder.
-    var builder: String = "MENU\n"
 
-    // Enumerate Catalogue to get Catalogue Item indices, then plus one.
-    for (index, availableItem) in self.availableItems.enumerated() {
-        builder = builder + "\(index + 1). \(availableItem)\n"
+    /// Conformance to CustomStringConvertible.
+    var description: String {
+        // Create a string builder.
+        var builder: String = "MENU\n"
+
+        // Enumerate Catalogue to get Catalogue Item indices, then plus one.
+        for (index, availableItem) in self.availableItems.enumerated() {
+            builder = builder + "\(index + 1). \(availableItem)\n"
+        }
+        return builder
     }
-    return builder
-}
-
 }
 
 
 /// items user will order from the Catalogue
 struct Cart: CustomStringConvertible {
     /// our decided max limit of items user is allowed to order in one order.
-    let CartLimit: Int = 5
+static let cartLimit: Int = 5
+
 
     /// The user's items. Items will be added to/removed from it.
     var userItems: [CatalogueItem] = []
 
-/// Get cart's total price as string formatted for NZD.
-var totalPriceString: String {
-    // Calculate price of ALL items in cart.
-    var GrandTotal: Double = 0.0
-    for item in self.userItems { GrandTotal = GrandTotal + item.itemPrice }
+    /// Get cart's total price as string formatted for NZD.
+    var totalPriceString: String {
+        // Calculate price of ALL items in cart.
+        var GrandTotal: Double = 0.0
+for item in self.userItems { GrandTotal = GrandTotal + item.itemPrice }
 
-    let TotalString: String = String(format: "%.2f", GrandTotal)
-    return "$\(TotalString)"
-}
+
+        let TotalString: String = String(format: "%.2f", GrandTotal)
+        return "$\(TotalString)"
+    }
 
     /// User to add item to cart, as long as cart hasn't reached max limit
     /// 
@@ -135,7 +138,7 @@ var totalPriceString: String {
     ///   - fromCatalogue: catalogue to find item.
     mutating func addItem(itemX name: String, fromCatalogue catalogue: Catalogue) throws {
         // Check that cart has not reached max limit
-        guard self.userItems.count != CartLimit else {
+        guard self.userItems.count != Cart.cartLimit else {
             // If cart has reached max limit, throw error.
             throw WebError(message: "Sorry, cart is full.")
         }
@@ -181,13 +184,66 @@ var totalPriceString: String {
     }
 }
 
+/// A finished order from user to website.
+struct userOrder: CustomStringConvertible {
+    /// The catalogue items that are part of user's order.
+    let cart: Cart
+
+    init(cart: Cart) throws {
+        // Check if cart contains any catalogue items.
+        if !cart.userItems.isEmpty {
+            self.cart = cart
+        } else {
+            // If cart contains no items, throw error.
+            throw WebError(message: "Sorry, your order cannot be empty.")
+        }
+    }
+
+    /// Conformance to CustomStringConvertible.
+    var description: String {
+        // To split cart lines.
+        let cartLinesSplit: [String] = self.cart.description.components(separatedBy: "\n")
+
+        // Remove first line so it doesn't say "CART".
+        let cartDescription: String = cartLinesSplit[1...].joined(separator: "\n")
+
+        return cartDescription
+    }
+}
+
+/// History of orders which have been placed so far by user.
+struct userOrderHistory: CustomStringConvertible {
+    /// Orders which have been placed by user. Finished orders will be added to this array.
+    var allOrders: [userOrder] = []
+
+    /// Add new order to order history.
+    mutating func addOrder(order: userOrder) { self.allOrders.append(order) }
+
+    /// Conformance to CustomStringConvertible.
+    var description: String {
+        // Create string builder.
+        var builder: String = "ORDERS\n"
+
+        // Loop over each individual order and print its items and total price.
+        for order in self.allOrders { builder = builder + order.description + "\n" }
+        return builder
+    }
+}
+
 /// start of GUI Program
 class SalesWebsiteGUIProgram: OCApp {
+
 // Catalogue from where user selects items to order
 var catalogue: Catalogue? = nil
 
+
 /// User's cart. It begins empty.
-var cart: Cart = Cart()
+
+var userCart: Cart = Cart()
+
+/// User's collection of orders, so far. This begins empty.
+var orderHistory: userOrderHistory = userOrderHistory()
+
 
     // GUI controls for program
     let catalogueListView = OCListView()
@@ -195,6 +251,9 @@ var cart: Cart = Cart()
     let addToCartButton = OCButton(text: "Add to Cart")
 let cartItemsVBox = OCVBox(controls: [])
 let cartPriceLabel = OCLabel(text: "")
+
+let orderButton = OCButton(text: "Place your Order: ")
+
 
 // Track remove buttons.
 var totalRemoveButtons: [OCButton] = []
@@ -218,7 +277,7 @@ var totalRemoveButtons: [OCButton] = []
         self.cartItemsVBox.empty()
         self.totalRemoveButtons = []
 
-        for item in self.cart.userItems {
+        for item in self.userCart.userItems {
             // Label and the remove button for cart item.
             let label = OCLabel(text: item.itemName)
             let buttonRemove = OCButton(text: "➖")
@@ -233,7 +292,14 @@ var totalRemoveButtons: [OCButton] = []
         }
 
         // Add cart's total price to GUI.
-        self.cartPriceLabel.text = self.cart.totalPriceString
+self.cartPriceLabel.text = self.userCart.totalPriceString
+
+// If cart contains items, enable order button.
+self.orderButton.enabled = !self.userCart.userItems.isEmpty
+
+// If cart full (meaning it contains 5 items), disable add to cart button.
+self.addToCartButton.enabled = self.userCart.userItems.count != Cart.cartLimit
+
     }
 
     /// Add selected item to cart.
@@ -248,7 +314,8 @@ var totalRemoveButtons: [OCButton] = []
 
         // Add item to cart.
         do {
-            try self.cart.addItem(itemX: itemName, fromCatalogue: self.catalogue!)
+try self.userCart.addItem(itemX: itemName, fromCatalogue: self.catalogue!)
+
             // Add the item to the GUI.
             self.resetItemsVBox()
             OCDialog(title: "Success", message: "Added \(itemName)!", app: self).show()
@@ -265,7 +332,8 @@ var totalRemoveButtons: [OCButton] = []
         do {
             let button = button as! OCButton
             let index = self.totalRemoveButtons.firstIndex(where: { $0.pythonObject == button.pythonObject })!
-            try self.cart.removeItem(RemoveItemName: self.cart.userItems[index].itemName)
+try self.userCart.removeItem(RemoveItemName: self.userCart.userItems[index].itemName)
+
 
             // Remove item from GUI.
             self.resetItemsVBox()
@@ -275,6 +343,29 @@ var totalRemoveButtons: [OCButton] = []
             }
         }
     }
+/// Method to place order.
+func onOrderButtonClick(button: any OCControlClickable) {
+    do {
+        // Create order.
+        let order: userOrder = try userOrder(cart: self.userCart)
+
+        // Add this order to overall order history.
+        self.orderHistory.addOrder(order: order)
+        let dialog = OCDialog(title: "Success", message: "", app: self)
+        // Show each new line in the order's description as a new label.
+        for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
+            try dialog.addField(key: "\(index)", field: OCLabel(text: line))
+        }
+        dialog.show()
+
+        // Create new cart.
+        self.userCart = Cart()
+        self.resetItemsVBox()
+    } catch {
+        if let error = error as? WebError { OCDialog(title: "Add error", message: error.message, app: self).show() }
+    }
+}
+
 
     /// Main method.
     override open func main(app: any OCAppDelegate) -> OCControl {
@@ -299,19 +390,26 @@ var totalRemoveButtons: [OCButton] = []
         // Set up control widths.
         self.catalogueListView.width = OCSize.percent(100)
         self.cartItemsVBox.width = OCSize.percent(100)
+// Set control states.
+self.orderButton.enabled = false
+
 
         // Add catalogue items to catalogue list view.
         for item in self.catalogue!.availableItems {
             self.catalogueListView.append(item: item.itemName)
         }
+
 // Set up event methods.
 self.catalogueListView.onChange(self.onCatalogueListViewChange)
 self.addToCartButton.onClick(self.onAddToCartButtonClick)
 
+self.orderButton.onClick(self.onOrderButtonClick)
+
 
         // Set up layout.
         let menuVBox = OCVBox(controls: [self.catalogueListView, self.cartPriceLabel, self.addToCartButton])
-        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel])
+let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
+
         return OCHBox(controls: [menuVBox, cartVBox])
     }
 }
