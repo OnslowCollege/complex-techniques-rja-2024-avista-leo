@@ -261,6 +261,8 @@ body> :nth-of-type(2) {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, .1);
     height: 100%;
     justify-content: start !important;
+    vertical-align: top;
+        align-self: flex-end;
 }
 
 .remi-main .HBox,
