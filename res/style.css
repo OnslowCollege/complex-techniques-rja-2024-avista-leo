@@ -261,14 +261,14 @@ body> :nth-of-type(2) {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, .1);
     height: 100%;
     justify-content: start !important;
-    vertical-align: top;
-        align-self: flex-end;
+    vertical-align: bottom;
 }
 
 .remi-main .HBox,
 .remi-main .VBox {
     box-sizing: border-box;
     padding: 24px;
+    vertical-align: top;
 }
 
 .remi-main .VBox>.HBox {
