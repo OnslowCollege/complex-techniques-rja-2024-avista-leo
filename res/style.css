@@ -532,7 +532,6 @@ button::first-line {
     z-index: 1;
     min-width: 100px;
     max-width: 200px;
-    vertical-align: top;
 }
 
 .remi-main .MenuBar>.Menu>.MenuItem {
