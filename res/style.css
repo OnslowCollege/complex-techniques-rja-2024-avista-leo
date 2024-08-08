@@ -50,7 +50,7 @@ html {
 
 .remi-main {
     display: grid;
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-size: 14pt;
     font-weight: 400;
     justify-content: center;
@@ -77,7 +77,7 @@ html {
 .remi-main h4 small,
 .remi-main h5 small,
 .remi-main h6 small {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 400;
     line-height: 1.35;
     letter-spacing: -.02em;
@@ -94,7 +94,7 @@ html {
 
 .remi-main h1,
 .remi-main h2 {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 400
 }
 
@@ -115,7 +115,7 @@ html {
 
 .remi-main h3,
 .remi-main h4 {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 400
 }
 
@@ -135,7 +135,7 @@ html {
 
 .remi-main h5,
 .remi-main h6 {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     margin: 24px 0 16px
 }
 
@@ -160,7 +160,7 @@ html {
 }
 
 .remi-main blockquote {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     position: relative;
     font-size: 170%;
     font-weight: 300;
@@ -308,6 +308,7 @@ body> :nth-of-type(2) {
     padding: 4px;
     min-width: calc(100% - 8px);
     border: none;
+    font-family: "Helvetica", "Arial", sans-serif;
 }
 
 .remi-main .ListItem[selected='True'] {
@@ -353,7 +354,7 @@ button,
 select {
     grid-row: 1;
     font-size: 14pt;
-        font-family: "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     min-height: 1.75em;
     max-height: 1.75em;
     padding: 0 2em;
@@ -437,7 +438,7 @@ button::first-line {
 
 .remi-main .TextInput {
     display: block;
-    font-family: "Lucida Grande", "Lucida Sans", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     padding: 0;
     /*background: 0 0;*/
     text-align: left;
@@ -481,7 +482,7 @@ button::first-line {
     border-bottom: 1px solid rgba(111, 111, 143, 0.5);
     margin: 0px;
     padding: 4px 0 4px 0;
-    font-family: "Lucida Grande", "Lucida Sans", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     text-align: center;
     margin-top: -8px;
 }
