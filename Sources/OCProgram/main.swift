@@ -251,7 +251,7 @@ class SalesWebsiteGUIProgram: OCApp {
     let addToCartButton = OCButton(text: "Add to Cart")
     let cartItemsVBox = OCVBox(controls: [])
     let cartPriceLabel = OCLabel(text: "")
-    let orderButton = OCButton(text: "Place your Order: ")
+    let orderButton = OCButton(text: "Confirm Order: ")
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
