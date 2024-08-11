@@ -394,7 +394,7 @@ select:before {
     width: calc(100% - 0.875em);
     border-radius: 2em 2em 0.5em 0.5em;
     top: 5%;
-    filter: blur(1px);
+
     z-index: 2 !important;
 }
 
