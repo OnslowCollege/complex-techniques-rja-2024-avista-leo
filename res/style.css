@@ -360,16 +360,18 @@ select {
     padding: 0 2em;
     min-width: 6em;
     border: 0;
+    /*border-radius: 1000px;*/
     position: relative !important;
     overflow: hidden;
     cursor: default;
     outline: none;
     background: linear-gradient(rgba(160, 160, 160, 0.625), rgba(255, 255, 255, 0.625));
-    box-shadow: 0 0.375em 0.5em rgba(0, 0, 0, 0.2), 0 0.125em 0.125em rgba(0, 0, 0, 0.3), inset 0 0.25em 0.25em rgba(0, 0, 0, 0.4), inset 0 0.375em 0.5em 0.25em #BBBBBB;
+    /*box-shadow: 0 0.375em 0.5em rgba(0, 0, 0, 0.2), 0 0.125em 0.125em rgba(0, 0, 0, 0.3), inset 0 0.25em 0.25em rgba(0, 0, 0, 0.4), inset 0 0.375em 0.5em 0.25em #BBBBBB;*/
 }
 
 select {
     appearance: none;
+    border-radius: 6px !important;
     width: 100%;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.8) !important;
     padding-left: 16px;
@@ -390,8 +392,9 @@ select:before {
     height: 33%;
     background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
     width: calc(100% - 0.875em);
+    /*border-radius: 2em 2em 0.5em 0.5em;*/
     top: 5%;
-    filter: blur(1px);
+    /*filter: blur(1px);*/
     z-index: 2 !important;
 }
 
@@ -404,6 +407,7 @@ select:after {
     height: 33%;
     background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5));
     width: calc(100% - 1.25em);
+    /*border-radius: 0.75em;*/
     bottom: 10%;
     filter: blur(3px);
 }
@@ -419,7 +423,6 @@ button::first-line {
     z-index: 1 !important;
     -webkit-text-stroke-width: 0.025em;
     -webkit-text-stroke-color: #000000;
-    text-shadow: 0 0.25em 0.2em rgba(0, 0, 0, 0.25);
 }
 
 @keyframes remi-main-outline-animation {
