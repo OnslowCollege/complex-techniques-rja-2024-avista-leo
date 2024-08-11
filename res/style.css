@@ -360,7 +360,6 @@ select {
     padding: 0 2em;
     min-width: 6em;
     border: 0;
-    border-radius: 1000px;
     position: relative !important;
     overflow: hidden;
     cursor: default;
@@ -371,7 +370,6 @@ select {
 
 select {
     appearance: none;
-    border-radius: 6px !important;
     width: 100%;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.8) !important;
     padding-left: 16px;
@@ -391,8 +389,7 @@ select:before {
     transform: translateX(-50%);
     height: 33%;
     background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
-
-    border-radius: 2em 2em 0.5em 0.5em;
+    width: calc(100% - 0.875em);
     top: 5%;
     filter: blur(1px);
     z-index: 2 !important;
@@ -407,7 +404,6 @@ select:after {
     height: 33%;
     background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5));
     width: calc(100% - 1.25em);
-    border-radius: 0.75em;
     bottom: 10%;
     filter: blur(3px);
 }
