@@ -228,16 +228,16 @@ html {
 }
 
 body> :nth-of-type(2) {
-    background: #ece9d8;
+    background: #FFFFFF;
     /*background: repeating-linear-gradient(to bottom,
             #FEFEFE,
             #FEFEFE 2px,
             #F0F0F0 2px,
             #F0F0F9 4px);
                 */ box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
-    margin-top: 32px;
+    margin-top: 5px;
     transition: height 1s;
-    width: 2000px;
+    width: 500px;
     max-height: fit-content !important;
     padding: 32px !important;
     position: absolute;
@@ -247,8 +247,8 @@ body> :nth-of-type(2) {
     right: 0;
     aspect-ratio: 16 / 9;
     margin: auto;
-    margin-top: 64px;
-    margin-bottom: 64px;
+    margin-top: 5px;
+        margin-bottom: 5px;
 }
 
 
