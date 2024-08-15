@@ -295,7 +295,7 @@ body> :nth-of-type(2) {
     resize: horizontal;
     margin: 0;
     font-family: "Helvetica", "Arial", sans-serif;
-    align-content: middle;
+    align-content: center;
 }
 
 .remi-main option:hover {
@@ -316,6 +316,7 @@ body> :nth-of-type(2) {
 .remi-main .ListItem[selected='True'] {
     background: #0831d9;
     color: white;
+    text-align: center;
 }
 
 .remi-main input[type='number'],
