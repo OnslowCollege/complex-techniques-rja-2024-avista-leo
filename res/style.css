@@ -290,11 +290,12 @@ body> :nth-of-type(2) {
     cursor: default;
     overflow: auto;
     list-style: none;
-    min-width: 200px;
+    min-width: 100px;
     box-shadow: inset 1px 1px #999;
     resize: horizontal;
     margin: 0;
     font-family: "Helvetica", "Arial", sans-serif;
+    align-content: middle;
 }
 
 .remi-main option:hover {
