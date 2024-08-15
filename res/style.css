@@ -311,6 +311,7 @@ body> :nth-of-type(2) {
     min-width: calc(100% - 8px);
     border: none;
     font-family: "Helvetica", "Arial", sans-serif;
+    text-align: center;
 }
 
 .remi-main .ListItem[selected='True'] {
