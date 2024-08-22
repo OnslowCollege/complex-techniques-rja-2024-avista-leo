@@ -5,7 +5,6 @@
 
 import Foundation
 import OCGUI
-import PythonKit
 import CodableCSV
 
 /// An error thrown by this program.
@@ -25,12 +24,16 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// price of the item in NZD
     let itemPrice: Double
 
+    /// Image of Item
+    let itemImage: String
+
     /// Create an item with validation
     ///
     /// - Parameters:
     ///     - itemName: name of the item in the catalogue
     ///     - itemPrice: price of the item in the catalogue
-    init(itemName: String, itemPrice: Double) throws{
+    ///     - itemImage: image of the item in the catalogue
+    init(itemName: String, itemPrice: Double, itemImage: String) throws{
         // if statement to check that itemName is not empty
         if itemName.count > 0 {
             self.itemName = itemName
@@ -46,12 +49,21 @@ struct CatalogueItem: Codable, CustomStringConvertible {
         } else {
             throw WebError(message: "Sorry we do not give out any items for free nor do we pay customers to take our items.")
         }
+
+        // if statement to check that itemImage is not empty
+        if itemImage.count > 0 {
+            self.itemImage = itemImage
+            // if itemImage is empty, give the user an error message
+        } else {
+            throw WebError(message: "Item images in the catalogue cannot be empty.")
+        }
     }
 
     // Conformance to Codable.
     enum CodingKeys : Int, CodingKey {
         case itemName = 0
         case itemPrice = 1
+        case itemImage = 2
     }
 
     /// Catalogue Item's price as a string formatted in NZD
@@ -62,7 +74,7 @@ struct CatalogueItem: Codable, CustomStringConvertible {
 
     /// Compatibility with CustomStringConvertible
     var itemDescription: String {
-        return "\(self.itemName) .......... \(self.priceDescription)"
+        return "\(self.itemImage)...\(self.itemName) .......... \(self.priceDescription)"
     }
 
     var description: String {
@@ -256,6 +268,9 @@ class SalesWebsiteGUIProgram: OCApp {
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
+
+    /// Add OCImageViews to Catalogue Items
+
 
     /// Update labels when new catalogue item is selected by user.
     func onCatalogueListViewChange(listView: any OCControlChangeable, selected: OCListItem) {
