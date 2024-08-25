@@ -268,9 +268,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
-
-    /// Add OCImageViews to Catalogue Items
-
+    
 
     /// Update labels when new catalogue item is selected by user.
     func onCatalogueListViewChange(listView: any OCControlChangeable, selected: OCListItem) {
@@ -409,6 +407,26 @@ class SalesWebsiteGUIProgram: OCApp {
         // Add catalogue items to catalogue list view.
         for item in self.catalogue!.availableItems {
             self.catalogueListView.append(item: item.itemName)
+            /// Add OCImageViews to CatalogueListView
+            catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Black socks.png"))
+            catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Green socks.png"))
+            catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
+            catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
+            catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
+            catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
+            catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Purple socks.png"))
+        
         }
 
         // Set up event methods.
