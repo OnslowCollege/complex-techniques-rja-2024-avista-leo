@@ -1,5 +1,5 @@
-name,price
-socks,10.0
-hoodies,50.0
-pants,80.0
-shirts,30.0
+name,price,image
+socks,10.0,Purple socks.png
+hoodies,50.0,Navy Blue hoodie.png
+pants,80.0,Khaki pants.png
+shirts,30.0,White t-shirt.png

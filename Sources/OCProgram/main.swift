@@ -383,9 +383,12 @@ class SalesWebsiteGUIProgram: OCApp {
         let decoder: CSVDecoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
 
         // Read in the catalogue.
-        guard let catalogueText = try? String(contentsOfFile: "catalogueItems.txt"),
-        let catalogueItems = try? decoder.decode([CatalogueItem].self, from: catalogueText) else {
-            print("Cannot load catalogue.")
+        guard let catalogueText = try? String(contentsOfFile: "catalogueItems.txt") else {
+            print("Cannot load catalogueItems.txt")
+            exit(0)
+        }
+        guard let catalogueItems = try? decoder.decode([CatalogueItem].self, from: catalogueText) else {
+            print("Cannot decode catalogue.")
             exit(0)
         }
 
@@ -426,7 +429,6 @@ class SalesWebsiteGUIProgram: OCApp {
             catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
             catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
             catalogueListView.append(OCImageView(filename: "Purple socks.png"))
-        
         }
 
         // Set up event methods.
