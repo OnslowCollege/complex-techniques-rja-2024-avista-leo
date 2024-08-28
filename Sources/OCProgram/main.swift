@@ -259,12 +259,13 @@ class SalesWebsiteGUIProgram: OCApp {
     var orderHistory: userOrderHistory = userOrderHistory()
 
     // GUI controls for program
-    let catalogueListView = OCListView()
+    let cartListView = OCListView()
     let priceTag = OCLabel(text: "")
     let addToCartButton = OCButton(text: "Add to Cart")
     let cartItemsVBox = OCVBox(controls: [])
     let cartPriceLabel = OCLabel(text: "")
     let orderButton = OCButton(text: "Confirm Order: ")
+    let catalogueListView = OCListView()
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
@@ -409,7 +410,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Add catalogue items to catalogue list view.
         for item in self.catalogue!.availableItems {
-            self.catalogueListView.append(item: item.itemName)
+            self.cartListView.append(item: item.itemName)
             /// Add OCImageViews to CatalogueListView
             catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
             catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
@@ -437,9 +438,10 @@ class SalesWebsiteGUIProgram: OCApp {
         self.orderButton.onClick(self.onOrderButtonClick)
 
         // Set up layout.
-        let menuVBox = OCVBox(controls: [self.catalogueListView, self.cartPriceLabel, self.addToCartButton])
+        let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
         let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
-        return OCHBox(controls: [menuVBox, cartVBox])
+        let catalogueVBox = OCVBox(controls: [self.catalogueListView])
+        return OCHBox(controls: [menuVBox, cartVBox, catalogueVBox])
     }
 }
 SalesWebsiteGUIProgram().start()
