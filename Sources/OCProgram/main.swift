@@ -378,6 +378,50 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
+     /// Organize images in a grid layout using OCVBox and OCHBox
+    func setupCatalogueListView() {
+        // Define the number of columns for the grid layout
+        let columns: Int = 3
+        let imageFilenames = [
+            "Baby Blue hoodie.png", "Baby Blue t-shirt.png", "Black socks.png",
+            "Black t-shirt.png", "Dark Blue socks.png", "Dark Grey hoodie.png",
+            "Dark Grey pants.png", "Dark Grey t-shirt.png", "Eggshell White t-shirt.png",
+            "Green socks.png", "Khaki pants.png", "Light Blue pants.png",
+            "Light Grey hoodie.png", "Light Grey pants.png", "Moss Green pants.png",
+            "Navy Blue hoodie.png", "Pink hoodie.png", "Purple socks.png"
+        ]
+
+        var rows: [OCHBox] = []
+        var currentRow: [OCImageView] = []
+
+        // Create rows of image views
+        for (index, filename) in imageFilenames.enumerated() {
+            let imageView = OCImageView(filename: filename)
+            currentRow.append(imageView)
+            
+            // When the current row reaches the column limit, create a new row
+            if (index + 1) % columns == 0 {
+                let rowHBox = OCHBox(controls: currentRow)
+                rowHBox.width = OCSize.percent(100)
+                rows.append(rowHBox)
+                currentRow = []
+            }
+        }
+
+        // Add any remaining items in the currentRow if they are less than columns
+        if !currentRow.isEmpty {
+            let rowHBox = OCHBox(controls: currentRow)
+            rowHBox.width = OCSize.percent(100)
+            rows.append(rowHBox)
+        }
+
+        // Add all rows to the catalogue list view
+        let catalogueVBox = OCVBox(controls: rows)
+        catalogueVBox.width = OCSize.percent(100)
+        catalogueVBox.height = OCSize.percent(100) // Adjust as needed
+        self.catalogueListView.append(catalogueVBox)
+    }
+
     /// Main method.
     override open func main(app: any OCAppDelegate) -> OCControl {
         // Load the menus.
@@ -431,6 +475,9 @@ class SalesWebsiteGUIProgram: OCApp {
             catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
             catalogueListView.append(OCImageView(filename: "Purple socks.png"))
         }
+
+        // Setup catalogue list view with grid layout
+        self.setupCatalogueListView() // Call the function to set up the catalogue view
 
         // Set up event methods.
         self.catalogueListView.onChange(self.onCatalogueListViewChange)
