@@ -368,6 +368,7 @@ class SalesWebsiteGUIProgram: OCApp {
     func setupCatalogueListView() {
         // Define the number of columns for the grid layout
         let columns: Int = 2
+        let maxRows: Int = 10
 
         // Add catalogue item to catalogue list view.
         for item in self.catalogue!.availableItems {
@@ -432,10 +433,15 @@ class SalesWebsiteGUIProgram: OCApp {
                 rows.append(rowHBox)
                 currentRow = []
             }
+            
+            // Stop creating rows when we have reached the maximum number of rows
+            if rows.count >= maxRows {
+                break
+            }
         }
 
         // Add any remaining items in the currentRow if they are less than columns
-        if !currentRow.isEmpty {
+        if !currentRow.isEmpty && rows.count < maxRows {
             let rowHBox = OCHBox(controls: currentRow)
             rowHBox.width = OCSize.percent(100)
             rows.append(rowHBox)
