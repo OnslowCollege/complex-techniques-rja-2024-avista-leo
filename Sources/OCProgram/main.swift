@@ -372,7 +372,6 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Add catalogue item to catalogue list view.
         for item in self.catalogue!.availableItems {
-            self.cartListView.append(item: item.itemName)
             /// Add OCImageViews to CatalogueListView
             catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
             catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
@@ -477,6 +476,10 @@ class SalesWebsiteGUIProgram: OCApp {
         
         // Set control states.
         self.orderButton.enabled = false
+
+        // Add item names to catalogue.availableItems, so the cart works
+        for item in self.catalogue!.availableItems {
+            self.cartListView.append(item: item.itemName)
 
         // Setup catalogue list view with grid layout
         self.setupCatalogueListView() // Call the function to set up the catalogue view
