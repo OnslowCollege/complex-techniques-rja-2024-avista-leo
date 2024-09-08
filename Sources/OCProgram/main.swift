@@ -29,7 +29,6 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// - Parameters:
     ///     - itemName: name of the item in the catalogue
     ///     - itemPrice: price of the item in the catalogue
-    ///     - itemImage: image of the item in the catalogue
     init(itemName: String, itemPrice: Double, itemImage: String) throws{
         // if statement to check that itemName is not empty
         if itemName.count > 0 {
@@ -52,7 +51,6 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     enum CodingKeys : Int, CodingKey {
         case itemName = 0
         case itemPrice = 1
-        case itemImage = 2
     }
 
     /// Catalogue Item's price as a string formatted in NZD
@@ -69,7 +67,6 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     var description: String {
         return self.itemDescription
     }
-
 }
 
 /// A catalogue of items avalaible for sale on the website0
