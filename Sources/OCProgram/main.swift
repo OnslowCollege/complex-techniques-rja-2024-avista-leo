@@ -384,6 +384,31 @@ class SalesWebsiteGUIProgram: OCApp {
         for (index, filename) in imageFilenames.enumerated() {
             let imageView = OCImageView(filename: filename)
             currentRow.append(imageView)
+
+        // Add catalogue items to catalogue list view.
+        for item in self.catalogue!.availableItems {
+            self.cartListView.append(item: item.itemName)
+            /// Add OCImageViews to CatalogueListView
+            catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Black socks.png"))
+            catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Green socks.png"))
+            catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
+            catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
+            catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
+            catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
+            catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Purple socks.png"))
+        }
+
             
             // When the current row reaches the column limit, create a new row
             if (index + 1) % columns == 0 {
@@ -400,12 +425,6 @@ class SalesWebsiteGUIProgram: OCApp {
             rowHBox.width = OCSize.percent(100)
             rows.append(rowHBox)
         }
-
-        // Add all rows to the catalogue list view
-        let catalogueVBox = OCVBox(controls: rows)
-        catalogueVBox.width = OCSize.percent(100)
-        catalogueVBox.height = OCSize.percent(100) // Adjust as needed
-        self.catalogueListView.append(catalogueVBox)
     }
 
     /// Main method.
@@ -432,35 +451,11 @@ class SalesWebsiteGUIProgram: OCApp {
 
 
         // Set up control widths.
-        self.catalogueListView.width = OCSize.percent(100)
+        self.cartListView.width = OCSize.percent(100)
         self.cartItemsVBox.width = OCSize.percent(100)
         
         // Set control states.
         self.orderButton.enabled = false
-
-        // Add catalogue items to catalogue list view.
-        for item in self.catalogue!.availableItems {
-            self.cartListView.append(item: item.itemName)
-            /// Add OCImageViews to CatalogueListView
-            catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Black socks.png"))
-            catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Green socks.png"))
-            catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
-            catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
-            catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
-            catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
-            catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Purple socks.png"))
-        }
 
         // Setup catalogue list view with grid layout
         self.setupCatalogueListView() // Call the function to set up the catalogue view
@@ -473,8 +468,9 @@ class SalesWebsiteGUIProgram: OCApp {
         // Set up layout.
         let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
         let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
-        let catalogueVBox = OCVBox(controls: [self.catalogueListView])
-        return OCHBox(controls: [menuVBox, cartVBox, catalogueVBox])
+        let catalogueHBox = OCHBox(controls: [self.catalogueListView])
+        let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
+        return OCVBox(controls: [menuHBox, catalogueHBox])
     }
 }
 SalesWebsiteGUIProgram().start()
