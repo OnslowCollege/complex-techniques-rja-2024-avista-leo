@@ -24,9 +24,6 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// price of the item in NZD
     let itemPrice: Double
 
-    /// Image of Item
-    let itemImage: String
-
     /// Create an item with validation
     ///
     /// - Parameters:
@@ -49,14 +46,6 @@ struct CatalogueItem: Codable, CustomStringConvertible {
         } else {
             throw WebError(message: "Sorry we do not give out any items for free nor do we pay customers to take our items.")
         }
-
-        // if statement to check that itemImage is not empty
-        if itemImage.count > 0 {
-            self.itemImage = itemImage
-            // if itemImage is empty, give the user an error message
-        } else {
-            throw WebError(message: "Item images in the catalogue cannot be empty.")
-        }
     }
 
     // Conformance to Codable.
@@ -74,7 +63,7 @@ struct CatalogueItem: Codable, CustomStringConvertible {
 
     /// Compatibility with CustomStringConvertible
     var itemDescription: String {
-        return "\(self.itemImage)...\(self.itemName) .......... \(self.priceDescription)"
+        return "\(self.itemName) .......... \(self.priceDescription)"
     }
 
     var description: String {
