@@ -367,14 +367,14 @@ class SalesWebsiteGUIProgram: OCApp {
      /// Organize images in a grid layout using OCVBox and OCHBox
     func setupCatalogueListView() {
         // Define the number of columns for the grid layout
-        let columns: Int = 3
+        let columns: Int = 2
         let imageFilenames: [String] = [
             "Baby Blue hoodie.png", "Baby Blue t-shirt.png", "Black socks.png",
             "Black t-shirt.png", "Dark Blue socks.png", "Dark Grey hoodie.png",
             "Dark Grey pants.png", "Dark Grey t-shirt.png", "Eggshell White t-shirt.png",
             "Green socks.png", "Khaki pants.png", "Light Blue pants.png",
             "Light Grey hoodie.png", "Light Grey pants.png", "Moss Green pants.png",
-            "Navy Blue hoodie.png", "Pink hoodie.png", "Purple socks.png"
+            "Navy Blue hoodie.png", "Pink hoodie.png", "Purple socks.png", "White socks.png", "White t-shirt.png"
         ]
 
         var rows: [OCHBox] = []
@@ -388,25 +388,6 @@ class SalesWebsiteGUIProgram: OCApp {
         // Add catalogue items to catalogue list view.
         for item in self.catalogue!.availableItems {
             self.cartListView.append(item: item.itemName)
-            /// Add OCImageViews to CatalogueListView
-            catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Black socks.png"))
-            catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Green socks.png"))
-            catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
-            catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
-            catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
-            catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
-            catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Purple socks.png"))
         }
 
             
