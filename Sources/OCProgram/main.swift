@@ -262,6 +262,7 @@ class SalesWebsiteGUIProgram: OCApp {
         // Get item from catalogue.
         guard let item: CatalogueItem = self.catalogue!.FindItem(NameToSearch: selected.text) else {
             // If no item can be loaded, do nothing.
+            print("No item found in catalogue upon selection.")
             return
         }
 
@@ -302,12 +303,13 @@ class SalesWebsiteGUIProgram: OCApp {
     /// Add selected item to cart.
     func onAddToCartButtonClick(button: any OCControlClickable) {
         // Check a selection has been made by user.
-        guard let selected = self.catalogueListView.selectedItem else {
+        guard let selectedIndex = self.catalogueListView.selectedIndex else {
             // If an item hasn't been selected by user, do nothing.
+            print("No item selected.")
             return
         }
 
-        let itemName: String = selected.text
+        let itemName: String = self.catalogue!.availableItems[selectedIndex].itemName
 
         // Add item to cart.
         do {
@@ -317,6 +319,7 @@ class SalesWebsiteGUIProgram: OCApp {
             OCDialog(title: "Success", message: "Added \(itemName)!", app: self).show()
             // If item not successfully added, throw WebError to user.
         } catch {
+            print(error)
             if let error = error as? WebError {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
             }
