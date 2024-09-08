@@ -478,13 +478,14 @@ class SalesWebsiteGUIProgram: OCApp {
             catalogueListView.append(OCImageView(filename: "White t-shirt.png"))
         }
 
-        // Setup catalogue list view with grid layout
-        self.setupCatalogueListView() // Call the function to set up the catalogue view
 
         // Set up event methods.
         self.catalogueListView.onChange(self.onCatalogueListViewChange)
         self.addToCartButton.onClick(self.onAddToCartButtonClick)
         self.orderButton.onClick(self.onOrderButtonClick)
+        
+        // Setup catalogue list view with grid layout
+        self.setupCatalogueListView() // Call the function to set up the catalogue view
 
         // Set up layout.
         let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
