@@ -370,31 +370,6 @@ class SalesWebsiteGUIProgram: OCApp {
         let columns: Int = 2
         let maxRows: Int = 10
 
-        // Add catalogue item to catalogue list view.
-        for item in self.catalogue!.availableItems {
-            /// Add OCImageViews to CatalogueListView
-            catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Black socks.png"))
-            catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
-            catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
-            catalogueListView.append(OCImageView(filename: "Green socks.png"))
-            catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
-            catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
-            catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
-            catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
-            catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
-            catalogueListView.append(OCImageView(filename: "Purple socks.png"))
-            catalogueListView.append(OCImageView(filename: "White socks.png"))
-            catalogueListView.append(OCImageView(filename: "White t-shirt.png"))
-        }
-        
         let imageViews: [OCImageView] = [
             OCImageView(filename: "Baby Blue hoodie.png"),
             OCImageView(filename: "Baby Blue t-shirt.png"),
@@ -480,6 +455,28 @@ class SalesWebsiteGUIProgram: OCApp {
         // Add item names to catalogue.availableItems, so the cart works
         for item in self.catalogue!.availableItems {
             self.cartListView.append(item: item.itemName)
+            /// Add OCImageViews to CatalogueListView
+            catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Black socks.png"))
+            catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
+            catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
+            catalogueListView.append(OCImageView(filename: "Green socks.png"))
+            catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
+            catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
+            catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
+            catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
+            catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
+            catalogueListView.append(OCImageView(filename: "Purple socks.png"))
+            catalogueListView.append(OCImageView(filename: "White socks.png"))
+            catalogueListView.append(OCImageView(filename: "White t-shirt.png"))
+        }
 
         // Setup catalogue list view with grid layout
         self.setupCatalogueListView() // Call the function to set up the catalogue view
