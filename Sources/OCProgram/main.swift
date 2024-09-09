@@ -303,7 +303,7 @@ class SalesWebsiteGUIProgram: OCApp {
     /// Add selected item to cart.
     func onAddToCartButtonClick(button: any OCControlClickable) {
         // Check a selection has been made by user.
-        guard let selectedIndex = self.catalogueListView.selectedIndex else {
+        guard let selectedIndex = self.cartListView.selectedIndex else {
             // If an item hasn't been selected by user, do nothing.
             print("No item selected.")
             return
