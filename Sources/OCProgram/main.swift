@@ -335,6 +335,11 @@ class SalesWebsiteGUIProgram: OCApp {
 
             // Remove item from GUI.
             self.resetItemsVBox()
+
+            // Adjust cart's total price to GUI after removing item.
+            self.cartPriceLabel.text = self.userCart.totalPriceString
+
+        
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Remove error", message: error.message, app: self).show()
@@ -442,7 +447,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Set menu.
         guard let menu = try? Catalogue(availableItems: catalogueItems) else {
-            print("Cannot create menu.")
+            print("Cannot create catalogue.")
             exit(0)
         }
         self.catalogue = menu
