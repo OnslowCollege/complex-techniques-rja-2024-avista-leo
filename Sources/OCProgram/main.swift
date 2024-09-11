@@ -377,6 +377,7 @@ class SalesWebsiteGUIProgram: OCApp {
         // Define the number of columns for the grid layout
         let columns: Int = 2
         let maxRows: Int = 10
+        let rows: Int = 0
 
         let imageViews: [OCImageView] = [
             OCImageView(filename: "Baby Blue hoodie.png"),
@@ -401,7 +402,7 @@ class SalesWebsiteGUIProgram: OCApp {
             OCImageView(filename: "White t-shirt.png")
         ]
 
-        var rows: [OCHBox] = []
+        var rowsGUI: [OCHBox] = []
         var currentRow: [OCImageView] = []
         
         // Create rows of image views
@@ -412,21 +413,18 @@ class SalesWebsiteGUIProgram: OCApp {
             if (index + 1) % columns == 0 {
                 let rowHBox = OCHBox(controls: currentRow)
                 rowHBox.width = OCSize.percent(100)
-                rows.append(rowHBox)
+                rowsGUI.append(rowHBox)
                 currentRow = []
             }
             
             // Stop creating rows when we have reached the maximum number of rows
-            if rows.count >= maxRows {
-                break
-            }
         }
 
         // Add any remaining items in the currentRow if they are less than columns
-        if !currentRow.isEmpty && rows.count < maxRows {
+        if !currentRow.isEmpty{
             let rowHBox = OCHBox(controls: currentRow)
             rowHBox.width = OCSize.percent(100)
-            rows.append(rowHBox)
+            rowsGUI.append(rowHBox)
         }
     }
 
