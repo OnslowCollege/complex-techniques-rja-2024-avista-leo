@@ -29,7 +29,7 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// - Parameters:
     ///     - itemName: name of the item in the catalogue
     ///     - itemPrice: price of the item in the catalogue
-    init(itemName: String, itemPrice: Double) throws{
+    init(itemName: String, itemPrice: Double, itemImage: String) throws{
         // if statement to check that itemName is not empty
         if itemName.count > 0 {
             self.itemName = itemName
@@ -67,7 +67,6 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     var description: String {
         return self.itemDescription
     }
-
 }
 
 /// A catalogue of items avalaible for sale on the website0
@@ -185,7 +184,7 @@ for item in self.userItems { GrandTotal = GrandTotal + item.itemPrice }
 }
 
 /// A finished order from user to website.
-struct userOrder: CustomStringConvertible {
+struct userOrder : CustomStringConvertible {
     /// The catalogue items that are part of user's order.
     let cart: Cart
 
@@ -212,12 +211,13 @@ struct userOrder: CustomStringConvertible {
 }
 
 /// History of orders which have been placed so far by user.
-struct userOrderHistory: CustomStringConvertible {
+struct userOrderHistory : CustomStringConvertible {
     /// Orders which have been placed by user. Finished orders will be added to this array.
     var allOrders: [userOrder] = []
 
     /// Add new order to order history.
-    mutating func addOrder(order: userOrder) { self.allOrders.append(order) }
+mutating func addOrder(order: userOrder) { self.allOrders.append(order) }
+
 
     /// Conformance to CustomStringConvertible.
     var description: String {
@@ -225,7 +225,8 @@ struct userOrderHistory: CustomStringConvertible {
         var builder: String = "ORDERS\n"
 
         // Loop over each individual order and print its items and total price.
-        for order in self.allOrders { builder = builder + order.description + "\n" }
+for order in self.allOrders { builder = builder + order.description + "\n" }
+
         return builder
     }
 }
@@ -241,18 +242,21 @@ var catalogue: Catalogue? = nil
 
 var userCart: Cart = Cart()
 
+
 /// User's collection of orders, so far. This begins empty.
 var orderHistory: userOrderHistory = userOrderHistory()
 
 
     // GUI controls for program
-    let catalogueListView = OCListView()
+let cartListView = OCListView()
+
     let priceTag = OCLabel(text: "")
     let addToCartButton = OCButton(text: "Add to Cart")
 let cartItemsVBox = OCVBox(controls: [])
 let cartPriceLabel = OCLabel(text: "")
 
-let orderButton = OCButton(text: "Place your Order: ")
+let orderButton = OCButton(text: "Confirm Order: ")
+let catalogueListView = OCListView()
 
 
 // Track remove buttons.
@@ -264,6 +268,8 @@ var totalRemoveButtons: [OCButton] = []
         // Get item from catalogue.
         guard let item: CatalogueItem = self.catalogue!.FindItem(NameToSearch: selected.text) else {
             // If no item can be loaded, do nothing.
+print("No item found in catalogue upon selection.")
+
             return
         }
 
@@ -294,8 +300,10 @@ var totalRemoveButtons: [OCButton] = []
         // Add cart's total price to GUI.
 self.cartPriceLabel.text = self.userCart.totalPriceString
 
+
 // If cart contains items, enable order button.
 self.orderButton.enabled = !self.userCart.userItems.isEmpty
+
 
 // If cart full (meaning it contains 5 items), disable add to cart button.
 self.addToCartButton.enabled = self.userCart.userItems.count != Cart.cartLimit
@@ -305,12 +313,15 @@ self.addToCartButton.enabled = self.userCart.userItems.count != Cart.cartLimit
     /// Add selected item to cart.
     func onAddToCartButtonClick(button: any OCControlClickable) {
         // Check a selection has been made by user.
-        guard let selected = self.catalogueListView.selectedItem else {
+        guard let selectedIndex = self.cartListView.selectedIndex else {
             // If an item hasn't been selected by user, do nothing.
+print("No item selected.")
+
             return
         }
 
-        let itemName: String = selected.text
+let itemName: String = self.catalogue!.availableItems[selectedIndex].itemName
+
 
         // Add item to cart.
         do {
@@ -321,6 +332,8 @@ try self.userCart.addItem(itemX: itemName, fromCatalogue: self.catalogue!)
             OCDialog(title: "Success", message: "Added \(itemName)!", app: self).show()
             // If item not successfully added, throw WebError to user.
         } catch {
+print(error)
+
             if let error = error as? WebError {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
             }
@@ -337,35 +350,98 @@ try self.userCart.removeItem(RemoveItemName: self.userCart.userItems[index].item
 
             // Remove item from GUI.
             self.resetItemsVBox()
+// Adjust cart's total price to GUI after removing item.
+self.cartPriceLabel.text = self.userCart.totalPriceString
+
+
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Remove error", message: error.message, app: self).show()
             }
         }
     }
-/// Method to place order.
-func onOrderButtonClick(button: any OCControlClickable) {
-    do {
-        // Create order.
-        let order: userOrder = try userOrder(cart: self.userCart)
+    
+    /// Method to place order.
+    func onOrderButtonClick(button: any OCControlClickable) {
+        do {
+            // Create order.
+            let order: userOrder = try userOrder(cart: self.userCart)
 
-        // Add this order to overall order history.
-        self.orderHistory.addOrder(order: order)
-        let dialog = OCDialog(title: "Success", message: "", app: self)
-        // Show each new line in the order's description as a new label.
-        for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
-            try dialog.addField(key: "\(index)", field: OCLabel(text: line))
-        }
-        dialog.show()
-
-        // Create new cart.
-        self.userCart = Cart()
-        self.resetItemsVBox()
-    } catch {
-        if let error = error as? WebError { OCDialog(title: "Add error", message: error.message, app: self).show() }
-    }
+// Add this order to overall order history.
+self.orderHistory.addOrder(order: order)
+let dialog = OCDialog(title: "Success", message: "", app: self)
+// Show each new line in the order's description as a new label.
+for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
+    try dialog.addField(key: "\(index)", field: OCLabel(text: line))
 }
+dialog.show()
 
+
+            // Create new cart.
+            self.userCart = Cart()
+            self.resetItemsVBox()
+        } catch {
+            if let error = error as? WebError {
+                OCDialog(title: "Add error", message: error.message, app: self).show()
+            }
+        }
+    }
+
+    /// Organize images in a grid layout using OCVBox and OCHBox
+    func setupCatalogueListView() {
+        // Define the number of columns for the grid layout
+        let columns: Int = 2
+        let maxRows: Int = 10
+        let rows: Int = 0
+
+        let imageViews: [OCImageView] = [
+            OCImageView(filename: "Baby Blue hoodie.png"),
+            OCImageView(filename: "Baby Blue t-shirt.png"),
+            OCImageView(filename: "Black socks.png"),
+            OCImageView(filename: "Black t-shirt.png"),
+            OCImageView(filename: "Dark Blue socks.png"),
+            OCImageView(filename: "Dark Grey hoodie.png"),
+            OCImageView(filename: "Dark Grey pants.png"),
+            OCImageView(filename: "Dark Grey t-shirt.png"),
+            OCImageView(filename: "Eggshell White t-shirt.png"),
+            OCImageView(filename: "Green socks.png"),
+            OCImageView(filename: "Khaki pants.png"),
+            OCImageView(filename: "Light Blue pants.png"),
+            OCImageView(filename: "Light Grey hoodie.png"),
+            OCImageView(filename: "Light Grey pants.png"),
+            OCImageView(filename: "Moss Green pants.png"),
+            OCImageView(filename: "Navy Blue hoodie.png"),
+            OCImageView(filename: "Pink hoodie.png"),
+            OCImageView(filename: "Purple socks.png"),
+            OCImageView(filename: "White socks.png"),
+            OCImageView(filename: "White t-shirt.png")
+        ]
+
+        var rowsGUI: [OCHBox] = []
+        var currentRow: [OCImageView] = []
+        
+        // Create rows of image views
+        for (index, imageView) in imageViews.enumerated() {
+            currentRow.append(imageView)
+    
+            // When the current row reaches the column limit, create a new row
+            if (index + 1) % columns == 0 {
+                let rowHBox = OCHBox(controls: currentRow)
+                rowHBox.width = OCSize.percent(100)
+                rowsGUI.append(rowHBox)
+                currentRow = []
+            }
+// Stop creating rows when we have reached the maximum number of rows
+
+        }
+
+        // Add any remaining items in the currentRow if they are less than columns
+        if !currentRow.isEmpty{
+            let rowHBox = OCHBox(controls: currentRow)
+            rowHBox.width = OCSize.percent(100)
+            rowsGUI.append(rowHBox)
+        }
+    }
 
     /// Main method.
     override open func main(app: any OCAppDelegate) -> OCControl {
@@ -373,31 +449,61 @@ func onOrderButtonClick(button: any OCControlClickable) {
         let decoder: CSVDecoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
 
         // Read in the catalogue.
-        guard let catalogueText = try? String(contentsOfFile: "catalogueItems.txt"),
-        let catalogueItems = try? decoder.decode([CatalogueItem].self, from: catalogueText) else {
-            print("Cannot load catalogue.")
+        guard let catalogueText = try? String(contentsOfFile: "catalogueItems.txt") else {
+            print("Cannot load catalogueItems.txt")
+            exit(0)
+        }
+        guard let catalogueItems = try? decoder.decode([CatalogueItem].self, from: catalogueText) else {
+            print("Cannot decode catalogue.")
             exit(0)
         }
 
         // Set menu.
         guard let menu = try? Catalogue(availableItems: catalogueItems) else {
-            print("Cannot create menu.")
+print("Cannot create catalogue.")
+
             exit(0)
         }
         self.catalogue = menu
 
 
         // Set up control widths.
-        self.catalogueListView.width = OCSize.percent(100)
+self.cartListView.width = OCSize.percent(100)
+
         self.cartItemsVBox.width = OCSize.percent(100)
+        
 // Set control states.
 self.orderButton.enabled = false
 
 
-        // Add catalogue items to catalogue list view.
+// Add item names to catalogue.availableItems, so the cart works
+
         for item in self.catalogue!.availableItems {
-            self.catalogueListView.append(item: item.itemName)
+self.cartListView.append(item: item.itemName)
+/// Add OCImageViews to CatalogueListView
+catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
+catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
+catalogueListView.append(OCImageView(filename: "Black socks.png"))
+catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
+catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
+catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
+catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
+catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
+catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
+catalogueListView.append(OCImageView(filename: "Green socks.png"))
+catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
+catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
+catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
+catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
+catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
+catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
+catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
+catalogueListView.append(OCImageView(filename: "Purple socks.png"))
+catalogueListView.append(OCImageView(filename: "White socks.png"))
+catalogueListView.append(OCImageView(filename: "White t-shirt.png"))
+
         }
+
 
 // Set up event methods.
 self.catalogueListView.onChange(self.onCatalogueListViewChange)
@@ -405,12 +511,18 @@ self.addToCartButton.onClick(self.onAddToCartButtonClick)
 
 self.orderButton.onClick(self.onOrderButtonClick)
 
+// Setup catalogue list view with grid layout
+self.setupCatalogueListView()  // Call the function to set up the catalogue view
+
 
         // Set up layout.
-        let menuVBox = OCVBox(controls: [self.catalogueListView, self.cartPriceLabel, self.addToCartButton])
+let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
 let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
 
-        return OCHBox(controls: [menuVBox, cartVBox])
+let catalogueHBox = OCHBox(controls: [self.catalogueListView])
+let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
+return OCVBox(controls: [menuHBox, catalogueHBox])
+
     }
 }
 SalesWebsiteGUIProgram().start()

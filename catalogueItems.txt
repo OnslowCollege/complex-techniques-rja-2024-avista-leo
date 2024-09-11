@@ -1,5 +1,21 @@
 name,price
-socks,10.0
-hoodies,50.0
-pants,80.0
-shirts,30.0
+dark blue socks,10.0
+green socks,10.0
+black socks,10.0
+purple socks,10.0
+white socks,10.0
+baby blue hoodie,50.0
+dark grey hoodie,50.0
+light grey hoodie,50.0
+navy blue hoodie,50.0
+pink hoodie,50.0
+dark grey pants,80.0
+khaki pants,80.0
+light blue pants,80.0
+moss green pants,80.0
+light grey pants,80.0
+white t-shirt,30.0
+eggshell white t-shirt,30.0
+baby blue t-shirt,30.0
+black t-shirt,30.0
+dark grey t-shirt,30.0
