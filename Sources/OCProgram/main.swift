@@ -376,8 +376,6 @@ class SalesWebsiteGUIProgram: OCApp {
     func setupCatalogueListView() {
         // Define the number of columns for the grid layout
         let columns: Int = 2
-        let maxRows: Int = 10
-        let rows: Int = 0
 
         let imageViews: [OCImageView] = [
             OCImageView(filename: "Baby Blue hoodie.png"),
