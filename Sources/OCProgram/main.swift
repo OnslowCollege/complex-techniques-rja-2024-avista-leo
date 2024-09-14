@@ -372,10 +372,11 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-    /// Organize images in a grid layout using OCVBox and OCHBox
-    func setupCatalogueListView() {
-        // Define the number of columns for the grid layout
+    /// Organize images in a grid layout
+    static func autoLayout(using controls: [OCImageView]) -> OCVBox {
+
         let columns: Int = 2
+        let maxRows: Int = 10
 
         let imageViews: [OCImageView] = [
             OCImageView(filename: "Baby Blue hoodie.png"),
@@ -400,8 +401,9 @@ class SalesWebsiteGUIProgram: OCApp {
             OCImageView(filename: "White t-shirt.png")
         ]
 
-        var rowsGUI: [OCHBox] = []
+        var rows: [OCHBox] = []
         var currentRow: [OCImageView] = []
+        var rowCount: Int = 0
         
         // Create rows of image views
         for (index, imageView) in imageViews.enumerated() {
@@ -411,18 +413,23 @@ class SalesWebsiteGUIProgram: OCApp {
             if (index + 1) % columns == 0 {
                 let rowHBox = OCHBox(controls: currentRow)
                 rowHBox.width = OCSize.percent(100)
-                rowsGUI.append(rowHBox)
+                rows.append(rowHBox)
                 currentRow = []
+                rowCount += 1
             }
             
             // Stop creating rows when we have reached the maximum number of rows
+            if rowCount >= maxRows {
+                break
+            }
         }
 
         // Add any remaining items in the currentRow if they are less than columns
-        if !currentRow.isEmpty{
+        if !currentRow.isEmpty && rowCount < maxRows {
             let rowHBox = OCHBox(controls: currentRow)
             rowHBox.width = OCSize.percent(100)
-            rowsGUI.append(rowHBox)
+            rows.append(rowHBox)
+            rowCount += 1
         }
     }
 
