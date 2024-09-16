@@ -372,16 +372,6 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-    /// Organize images in a grid layout
-    static func autoLayout(using controls: [[OCImageView]]) -> OCVBox {
-        var hBoxes: [OCHBox] = []
-        for row in controls {
-            let newHBox = OCHBox(controls: row)
-            hBoxes.append(newHBox)
-        }
-        return OCVBox(controls: hBoxes)
-    }
-
     /// Main method.
     override open func main(app: any OCAppDelegate) -> OCControl {
         // Load the menus.
@@ -438,6 +428,25 @@ class SalesWebsiteGUIProgram: OCApp {
             catalogueList.append(OCImageView(filename: "White t-shirt.png"))
         }
 
+        // Set up Layout for ImageViews
+        var rows: [OCHBox] = []
+        let columns = 10
+
+        for rowIndex in 0..<2 {
+            var rowItems: [OCImageView] = []
+            for columnIndex in 0..<columns {
+                let itemIndex = rowIndex * columns + columnIndex
+                if itemIndex < catalogueList.count {
+                    rowItems.append(catalogueList[itemIndex])
+                }
+            }
+            let hBox = OCHBox(controls: rowItems)
+            rows.append(hBox)
+        }
+
+        // Create the OCVBox that holds all HBoxes
+        let gridLayout = OCVBox(controls: rows)
+
         // Set up event methods.
         self.cartListView.onChange(self.onCartListViewChange)
         self.addToCartButton.onClick(self.onAddToCartButtonClick)
@@ -447,7 +456,7 @@ class SalesWebsiteGUIProgram: OCApp {
         let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
         let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
         let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
-        return OCVBox(controls: [menuHBox])
+        return OCVBox(controls: [menuHBox, gridLayout])
     }
 }
 SalesWebsiteGUIProgram().start()
