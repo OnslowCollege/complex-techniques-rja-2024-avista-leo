@@ -24,12 +24,16 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// price of the item in NZD
     let itemPrice: Double
 
+    /// product information
+    let productInfo: String
+
     /// Create an item with validation
     ///
     /// - Parameters:
     ///     - itemName: name of the item in the catalogue
     ///     - itemPrice: price of the item in the catalogue
-    init(itemName: String, itemPrice: Double, itemImage: String) throws{
+    ///     - productInfo: users can view information about products in the catalogue.
+    init(itemName: String, itemPrice: Double, productInfo: String) throws{
         // if statement to check that itemName is not empty
         if itemName.count > 0 {
             self.itemName = itemName
@@ -45,12 +49,21 @@ struct CatalogueItem: Codable, CustomStringConvertible {
         } else {
             throw WebError(message: "Sorry we do not give out any items for free nor do we pay customers to take our items.")
         }
+
+        // if statement to check that productInfo is not empty
+        if productInfo.count > 0 {
+            self.productInfo = productInfo
+            // if productInfo is empty, give the user an error message
+        } else {
+            throw WebError(message: "Items in the catalogue require at least one character.")
+        }
     }
 
     // Conformance to Codable.
     enum CodingKeys : Int, CodingKey {
         case itemName = 0
         case itemPrice = 1
+        case productInfo = 2
     }
 
     /// Catalogue Item's price as a string formatted in NZD
@@ -59,9 +72,14 @@ struct CatalogueItem: Codable, CustomStringConvertible {
         return "$\(numberDescription)"
     }
 
+    /// Product Description for the user as a string.
+    var productDescription: String {
+        return productInfo
+    }
+
     /// Compatibility with CustomStringConvertible
     var itemDescription: String {
-        return "\(self.itemName) .......... \(self.priceDescription)"
+        return "\(self.itemName)..... \(self.productInfo).......... \(self.priceDescription)"
     }
 
     var description: String {
@@ -252,6 +270,7 @@ class SalesWebsiteGUIProgram: OCApp {
     let cartPriceLabel = OCLabel(text: "")
     let orderButton = OCButton(text: "Confirm Order: ")
     var catalogueList: [OCImageView] = []
+    let descriptionLabel = OCLabel(text: "")
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
@@ -268,6 +287,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Otherwise, update labels.
         self.priceTag.text = item.priceDescription
+        self.descriptionLabel.text = item.productDescription
     }
 
     /// Recreate items VBox when anything is added or removed.
@@ -360,7 +380,7 @@ class SalesWebsiteGUIProgram: OCApp {
             for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
                 try dialog.addField(key: "\(index)", field: OCLabel(text: line))
             }
-            dialog.hide()
+            dialog.show()
 
             // Create new cart.
             self.userCart = Cart()
@@ -387,7 +407,7 @@ class SalesWebsiteGUIProgram: OCApp {
             exit(0)
         }
 
-        // Set menu.
+        // Set catalogue.
         guard let menu = try? Catalogue(availableItems: catalogueItems) else {
             print("Cannot create catalogue.")
             exit(0)
@@ -453,7 +473,7 @@ class SalesWebsiteGUIProgram: OCApp {
         self.orderButton.onClick(self.onOrderButtonClick)
 
         // Set up layout.
-        let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
+        let menuVBox = OCVBox(controls: [self.cartListView, self.descriptionLabel, self.cartPriceLabel, self.addToCartButton])
         let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
         let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
         return OCVBox(controls: [menuHBox, gridLayout])
