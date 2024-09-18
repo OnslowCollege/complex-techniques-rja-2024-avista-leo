@@ -67,16 +67,16 @@ struct CatalogueItem: Codable, CustomStringConvertible {
 
     /// Provides a description of the product.
     var productDescription: String {
-        productInfo
+        return productInfo
     }
 
     /// Implements CustomStringConvertible.
     var itemDescription: String {
-        "\(itemName)..... \(productInfo).......... \(priceDescription)"
+        return "\(itemName)..... \(productInfo).......... \(priceDescription)"
     }
 
     var description: String {
-        itemDescription
+        return itemDescription
     }
 }
 
@@ -423,7 +423,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Create the VBox that holds all rows of image views.
         let gridLayout = OCVBox(controls: rows)
-        
+
         // Set event handlers for controls.
         cartListView.onChange(onCartListViewChange)
         addToCartButton.onClick(onAddToCartButtonClick)
