@@ -407,9 +407,9 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Set up the layout for the image views.
         var rows: [OCHBox] = []
-        let columns = 10
+        let columns = 12
 
-        for rowIndex in 0..<3 {
+        for rowIndex in 0..<2 {
             var rowItems: [OCImageView] = []
             for columnIndex in 0..<columns {
                 let itemIndex = rowIndex * columns + columnIndex
