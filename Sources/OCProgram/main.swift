@@ -404,6 +404,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Create the VBox that holds all rows of image views.
         let gridLayout = OCVBox(controls: rows)
+        gridLayout.width = OCSize.percent(150)
 
         // Set event handlers for controls.
         cartListView.onChange(onCartListViewChange)
