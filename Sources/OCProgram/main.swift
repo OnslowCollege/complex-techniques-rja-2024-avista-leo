@@ -271,6 +271,7 @@ class SalesWebsiteGUIProgram: OCApp {
     let orderButton = OCButton(text: "Confirm Order: ")
     var catalogueList: [OCImageView] = []
     let descriptionLabel = OCLabel(text: "")
+    var descriptionLabels: [OCLabel] = [] 
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
@@ -446,6 +447,7 @@ class SalesWebsiteGUIProgram: OCApp {
             catalogueList.append(OCImageView(filename: "Purple socks.png"))
             catalogueList.append(OCImageView(filename: "White socks.png"))
             catalogueList.append(OCImageView(filename: "White t-shirt.png"))
+            descriptionLabels.append(OCLabel(text: item.productDescription))
         }
 
         // Set up Layout for ImageViews
@@ -460,7 +462,7 @@ class SalesWebsiteGUIProgram: OCApp {
                     rowItems.append(catalogueList[itemIndex])
                 }
             }
-            let hBox = OCHBox(controls: rowItems)
+            let hBox = OCHBox(controls: [rowItems, descriptionLabels])
             rows.append(hBox)
         }
 
