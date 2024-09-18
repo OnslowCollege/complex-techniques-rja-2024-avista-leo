@@ -425,6 +425,8 @@ class SalesWebsiteGUIProgram: OCApp {
         // Add item names to catalogue.availableItems, so the cart works
         for item in self.catalogue!.availableItems {
             self.cartListView.append(item: item.itemName)
+            let nameLabel = OCLabel(text: item.itemName)
+            let imageView = OCImageView(filename: "\(item.itemName).png")
             /// Add OCImageViews to catalogueList
             catalogueList.append(OCImageView(filename: "Baby Blue hoodie.png"))
             catalogueList.append(OCImageView(filename: "Baby Blue t-shirt.png"))
@@ -446,7 +448,8 @@ class SalesWebsiteGUIProgram: OCApp {
             catalogueList.append(OCImageView(filename: "Purple socks.png"))
             catalogueList.append(OCImageView(filename: "White socks.png"))
             catalogueList.append(OCImageView(filename: "White t-shirt.png"))
-        }
+            // Create a horizontal box for the image and label
+            let imageBox = OCHBox(controls: [imageView, nameLabel])
 
         // Set up Layout for ImageViews
         var rows: [OCHBox] = []
@@ -465,7 +468,9 @@ class SalesWebsiteGUIProgram: OCApp {
         }
 
         // Create the OCVBox that holds all HBoxes
-        let gridLayout = OCVBox(controls: rows)
+        let gridLayout = OCVBox(controls: [rows, imageBox])
+
+        }
 
         // Set up event methods.
         self.cartListView.onChange(self.onCartListViewChange)
