@@ -390,7 +390,7 @@ class SalesWebsiteGUIProgram: OCApp {
         var rows: [OCHBox] = []
         let columns = 10
 
-        for rowIndex in 0..<2 {
+        for rowIndex in 0..<4 {
             var rowItems: [OCImageView] = []
             for columnIndex in 0..<columns {
                 let itemIndex = rowIndex * columns + columnIndex
@@ -404,7 +404,7 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Create the VBox that holds all rows of image views.
         let gridLayout = OCVBox(controls: rows)
-        gridLayout.width = OCSize.percent(150)
+        gridLayout.width = OCSize.percent(200)
 
         // Set event handlers for controls.
         cartListView.onChange(onCartListViewChange)
