@@ -379,11 +379,30 @@ class SalesWebsiteGUIProgram: OCApp {
         // Set the initial state of the controls.
         orderButton.enabled = false
 
-        // Populate the cart list view with item names from the catalogue.
+         // Add item names to catalogue.availableItems, so the cart works
         for item in catalogue!.availableItems {
             cartListView.append(item: item.itemName)
-            /// Add image views for each item.
-            catalogueList.append(OCImageView(filename: "\(item.itemName).png"))
+             /// Add OCImageViews to catalogueList
+            catalogueList.append(OCImageView(filename: "Baby Blue hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Baby Blue t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Black socks.png"))
+            catalogueList.append(OCImageView(filename: "Black t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Dark Blue socks.png"))
+            catalogueList.append(OCImageView(filename: "Dark Grey hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Dark Grey pants.png"))
+            catalogueList.append(OCImageView(filename: "Dark Grey t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Eggshell White t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Green socks.png"))
+            catalogueList.append(OCImageView(filename: "Khaki pants.png"))
+            catalogueList.append(OCImageView(filename: "Light Blue pants.png"))
+            catalogueList.append(OCImageView(filename: "Light Grey hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Light Grey pants.png"))
+            catalogueList.append(OCImageView(filename: "Moss Green pants.png"))
+            catalogueList.append(OCImageView(filename: "Navy Blue hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Pink hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Purple socks.png"))
+            catalogueList.append(OCImageView(filename: "White socks.png"))
+            catalogueList.append(OCImageView(filename: "White t-shirt.png"))
         }
 
         // Set up the layout for the image views.
