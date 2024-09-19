@@ -56,7 +56,8 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// Catalogue Item's price as a string formatted in NZD
     var priceDescription: String {
         let numberDescription: String = String(format: "%.2f", self.itemPrice)
-        return "$\(numberDescription)"
+return "Balance: $\(numberDescription)"
+
     }
 
     /// Compatibility with CustomStringConvertible
@@ -127,7 +128,8 @@ for item in self.userItems { GrandTotal = GrandTotal + item.itemPrice }
 
 
         let TotalString: String = String(format: "%.2f", GrandTotal)
-        return "$\(TotalString)"
+return "Balance: $\(TotalString)"
+
     }
 
     /// User to add item to cart, as long as cart hasn't reached max limit
@@ -256,7 +258,8 @@ let cartItemsVBox = OCVBox(controls: [])
 let cartPriceLabel = OCLabel(text: "")
 
 let orderButton = OCButton(text: "Confirm Order: ")
-let catalogueListView = OCListView()
+var catalogueList: [OCImageView] = []
+
 
 
 // Track remove buttons.
@@ -264,7 +267,7 @@ var totalRemoveButtons: [OCButton] = []
 
 
     /// Update labels when new catalogue item is selected by user.
-    func onCatalogueListViewChange(listView: any OCControlChangeable, selected: OCListItem) {
+    func onCartListViewChange(listView: any OCControlChangeable, selected: OCListItem) {
         // Get item from catalogue.
         guard let item: CatalogueItem = self.catalogue!.FindItem(NameToSearch: selected.text) else {
             // If no item can be loaded, do nothing.
@@ -293,7 +296,8 @@ print("No item found in catalogue upon selection.")
             // Add cart item with controls side by side.
             let cartItemHBox = OCHBox(controls: [label, buttonRemove])
             cartItemHBox.width = OCSize.percent(100)
-            cartItemHBox.height = OCSize.pixels(50)
+cartItemHBox.height = OCSize.percent(100)
+
             self.cartItemsVBox.append(control: cartItemHBox)
         }
 
@@ -350,10 +354,12 @@ try self.userCart.removeItem(RemoveItemName: self.userCart.userItems[index].item
 
             // Remove item from GUI.
             self.resetItemsVBox()
+
 // Adjust cart's total price to GUI after removing item.
 self.cartPriceLabel.text = self.userCart.totalPriceString
 
 
+        
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Remove error", message: error.message, app: self).show()
@@ -374,7 +380,8 @@ let dialog = OCDialog(title: "Success", message: "", app: self)
 for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
     try dialog.addField(key: "\(index)", field: OCLabel(text: line))
 }
-dialog.show()
+dialog.hide()
+
 
 
             // Create new cart.
@@ -384,62 +391,6 @@ dialog.show()
             if let error = error as? WebError {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
             }
-        }
-    }
-
-    /// Organize images in a grid layout using OCVBox and OCHBox
-    func setupCatalogueListView() {
-        // Define the number of columns for the grid layout
-        let columns: Int = 2
-        let maxRows: Int = 10
-        let rows: Int = 0
-
-        let imageViews: [OCImageView] = [
-            OCImageView(filename: "Baby Blue hoodie.png"),
-            OCImageView(filename: "Baby Blue t-shirt.png"),
-            OCImageView(filename: "Black socks.png"),
-            OCImageView(filename: "Black t-shirt.png"),
-            OCImageView(filename: "Dark Blue socks.png"),
-            OCImageView(filename: "Dark Grey hoodie.png"),
-            OCImageView(filename: "Dark Grey pants.png"),
-            OCImageView(filename: "Dark Grey t-shirt.png"),
-            OCImageView(filename: "Eggshell White t-shirt.png"),
-            OCImageView(filename: "Green socks.png"),
-            OCImageView(filename: "Khaki pants.png"),
-            OCImageView(filename: "Light Blue pants.png"),
-            OCImageView(filename: "Light Grey hoodie.png"),
-            OCImageView(filename: "Light Grey pants.png"),
-            OCImageView(filename: "Moss Green pants.png"),
-            OCImageView(filename: "Navy Blue hoodie.png"),
-            OCImageView(filename: "Pink hoodie.png"),
-            OCImageView(filename: "Purple socks.png"),
-            OCImageView(filename: "White socks.png"),
-            OCImageView(filename: "White t-shirt.png")
-        ]
-
-        var rowsGUI: [OCHBox] = []
-        var currentRow: [OCImageView] = []
-        
-        // Create rows of image views
-        for (index, imageView) in imageViews.enumerated() {
-            currentRow.append(imageView)
-    
-            // When the current row reaches the column limit, create a new row
-            if (index + 1) % columns == 0 {
-                let rowHBox = OCHBox(controls: currentRow)
-                rowHBox.width = OCSize.percent(100)
-                rowsGUI.append(rowHBox)
-                currentRow = []
-            }
-// Stop creating rows when we have reached the maximum number of rows
-
-        }
-
-        // Add any remaining items in the currentRow if they are less than columns
-        if !currentRow.isEmpty{
-            let rowHBox = OCHBox(controls: currentRow)
-            rowHBox.width = OCSize.percent(100)
-            rowsGUI.append(rowHBox)
         }
     }
 
@@ -480,48 +431,65 @@ self.orderButton.enabled = false
 
         for item in self.catalogue!.availableItems {
 self.cartListView.append(item: item.itemName)
-/// Add OCImageViews to CatalogueListView
-catalogueListView.append(OCImageView(filename: "Baby Blue hoodie.png"))
-catalogueListView.append(OCImageView(filename: "Baby Blue t-shirt.png"))
-catalogueListView.append(OCImageView(filename: "Black socks.png"))
-catalogueListView.append(OCImageView(filename: "Black t-shirt.png"))
-catalogueListView.append(OCImageView(filename: "Dark Blue socks.png"))
-catalogueListView.append(OCImageView(filename: "Dark Grey hoodie.png"))
-catalogueListView.append(OCImageView(filename: "Dark Grey pants.png"))
-catalogueListView.append(OCImageView(filename: "Dark Grey t-shirt.png"))
-catalogueListView.append(OCImageView(filename: "Eggshell White t-shirt.png"))
-catalogueListView.append(OCImageView(filename: "Green socks.png"))
-catalogueListView.append(OCImageView(filename: "Khaki pants.png"))
-catalogueListView.append(OCImageView(filename: "Light Blue pants.png"))
-catalogueListView.append(OCImageView(filename: "Light Grey hoodie.png"))
-catalogueListView.append(OCImageView(filename: "Light Grey pants.png"))
-catalogueListView.append(OCImageView(filename: "Moss Green pants.png"))
-catalogueListView.append(OCImageView(filename: "Navy Blue hoodie.png"))
-catalogueListView.append(OCImageView(filename: "Pink hoodie.png"))
-catalogueListView.append(OCImageView(filename: "Purple socks.png"))
-catalogueListView.append(OCImageView(filename: "White socks.png"))
-catalogueListView.append(OCImageView(filename: "White t-shirt.png"))
 
+            /// Add OCImageViews to catalogueList
+            catalogueList.append(OCImageView(filename: "Baby Blue hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Baby Blue t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Black socks.png"))
+            catalogueList.append(OCImageView(filename: "Black t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Dark Blue socks.png"))
+            catalogueList.append(OCImageView(filename: "Dark Grey hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Dark Grey pants.png"))
+            catalogueList.append(OCImageView(filename: "Dark Grey t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Eggshell White t-shirt.png"))
+            catalogueList.append(OCImageView(filename: "Green socks.png"))
+            catalogueList.append(OCImageView(filename: "Khaki pants.png"))
+            catalogueList.append(OCImageView(filename: "Light Blue pants.png"))
+            catalogueList.append(OCImageView(filename: "Light Grey hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Light Grey pants.png"))
+            catalogueList.append(OCImageView(filename: "Moss Green pants.png"))
+            catalogueList.append(OCImageView(filename: "Navy Blue hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Pink hoodie.png"))
+            catalogueList.append(OCImageView(filename: "Purple socks.png"))
+            catalogueList.append(OCImageView(filename: "White socks.png"))
+            catalogueList.append(OCImageView(filename: "White t-shirt.png"))
         }
+
+        // Set up Layout for ImageViews
+        var rows: [OCHBox] = []
+        let columns = 5
+
+        for rowIndex in 0..<4 {
+            var rowItems: [OCImageView] = []
+            for columnIndex in 0..<columns {
+                let itemIndex = rowIndex * columns + columnIndex
+                if itemIndex < catalogueList.count {
+                    rowItems.append(catalogueList[itemIndex])
+                }
+            }
+            let hBox = OCHBox(controls: rowItems)
+            rows.append(hBox)
+        }
+
+// Create the OCVBox that holds all HBoxes
+let gridLayout = OCVBox(controls: rows)
 
 
 // Set up event methods.
-self.catalogueListView.onChange(self.onCatalogueListViewChange)
+self.cartListView.onChange(self.onCartListViewChange)
+
 self.addToCartButton.onClick(self.onAddToCartButtonClick)
 
 self.orderButton.onClick(self.onOrderButtonClick)
-
-// Setup catalogue list view with grid layout
-self.setupCatalogueListView()  // Call the function to set up the catalogue view
 
 
         // Set up layout.
 let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
 let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
 
-let catalogueHBox = OCHBox(controls: [self.catalogueListView])
 let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
-return OCVBox(controls: [menuHBox, catalogueHBox])
+return OCVBox(controls: [menuHBox, gridLayout])
+
 
     }
 }
