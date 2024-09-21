@@ -29,7 +29,18 @@ body {
 .remi-main audio,
 .remi-main canvas,
 .remi-main iframe,
-.remi-main img,
+img {
+    width: 175px;
+    height: auto;
+    background-color: #FFFFFF;
+    border: blue;
+    border-bottom: 20px solid #FFFFFF;
+    border-right: 20px solid #FFFFFF;
+    border-left: 20px solid #FFFFFF;
+    border-top: 20px solid #FFFFFF;
+    ;
+    /*box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .14)*/
+}
 .remi-main svg,
 .remi-main video {
     vertical-align: middle
@@ -50,7 +61,7 @@ html {
 
 .remi-main {
     display: grid;
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-size: 14pt;
     font-weight: 400;
     justify-content: center;
@@ -77,7 +88,7 @@ html {
 .remi-main h4 small,
 .remi-main h5 small,
 .remi-main h6 small {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 400;
     line-height: 1.35;
     letter-spacing: -.02em;
@@ -94,7 +105,7 @@ html {
 
 .remi-main h1,
 .remi-main h2 {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 400
 }
 
@@ -115,7 +126,7 @@ html {
 
 .remi-main h3,
 .remi-main h4 {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 400
 }
 
@@ -135,7 +146,7 @@ html {
 
 .remi-main h5,
 .remi-main h6 {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     margin: 24px 0 16px
 }
 
@@ -160,7 +171,7 @@ html {
 }
 
 .remi-main blockquote {
-    font-family: "Lucida Grande", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     position: relative;
     font-size: 170%;
     font-weight: 300;
@@ -228,15 +239,16 @@ html {
 }
 
 body> :nth-of-type(2) {
-    background: repeating-linear-gradient(to bottom,
+    background: #FFFFFF;
+    /*background: repeating-linear-gradient(to bottom,
             #FEFEFE,
             #FEFEFE 2px,
             #F0F0F0 2px,
             #F0F0F9 4px);
-    box-shadow: 0 0 32px rgba(0, 0, 0, 0.8);
-    margin-top: 32px;
+                */ box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
+    margin-top: 5px;
     transition: height 1s;
-    width: 1024px;
+    width: 800px;
     max-height: fit-content !important;
     padding: 32px !important;
     position: absolute;
@@ -244,10 +256,10 @@ body> :nth-of-type(2) {
     bottom: 0;
     left: 0;
     right: 0;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     margin: auto;
-    margin-top: 64px;
-    margin-bottom: 64px;
+    margin-top: 5px;
+        margin-bottom: 5px;
 }
 
 
@@ -289,10 +301,12 @@ body> :nth-of-type(2) {
     cursor: default;
     overflow: auto;
     list-style: none;
-    min-width: 200px;
+    min-width: 100px;
     box-shadow: inset 1px 1px #999;
     resize: horizontal;
     margin: 0;
+    font-family: "Helvetica", "Arial", sans-serif;
+    align-content: center;
 }
 
 .remi-main option:hover {
@@ -306,12 +320,16 @@ body> :nth-of-type(2) {
     margin: 4px;
     padding: 4px;
     min-width: calc(100% - 8px);
+    max-width: 30px;
     border: none;
+    font-family: "Helvetica", "Arial", sans-serif;
+    text-align: center;
 }
 
 .remi-main .ListItem[selected='True'] {
     background: #0831d9;
     color: white;
+    text-align: center;
 }
 
 .remi-main input[type='number'],
@@ -352,19 +370,19 @@ button,
 select {
     grid-row: 1;
     font-size: 14pt;
-    font-family: "Lucida Grande", "Lucida Sans", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     min-height: 1.75em;
     max-height: 1.75em;
     padding: 0 2em;
     min-width: 6em;
     border: 0;
-    border-radius: 1000px;
+    /*border-radius: 1000px;*/
     position: relative !important;
     overflow: hidden;
     cursor: default;
     outline: none;
-    background: linear-gradient(rgba(160, 160, 160, 0.625), rgba(255, 255, 255, 0.625));
-    box-shadow: 0 0.375em 0.5em rgba(0, 0, 0, 0.2), 0 0.125em 0.125em rgba(0, 0, 0, 0.3), inset 0 0.25em 0.25em rgba(0, 0, 0, 0.4), inset 0 0.375em 0.5em 0.25em #BBBBBB;
+    /*background: linear-gradient(rgba(160, 160, 160, 0.625), rgba(255, 255, 255, 0.625));*/
+        box-shadow: 0 0.375em 0.5em rgba(0, 0, 0, 0.2), 0 0.125em 0.125em rgba(0, 0, 0, 0.3), inset 0 0.25em 0.25em rgba(0, 0, 0, 0.4), inset 0 0.375em 0.5em 0.25em #BBBBBB;
 }
 
 select {
@@ -374,7 +392,9 @@ select {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.8) !important;
     padding-left: 16px;
     background: linear-gradient(180deg, rgba(128, 128, 128, 0.75) 0%, rgba(226, 226, 226, 0.75) 1%, rgba(222, 222, 222, 0.75) 23%, rgba(209, 209, 209, 0.75) 36%, rgba(254, 254, 254, 0.75) 99%, rgba(128, 128, 128, 0.75) 100%) left / calc(100% - 32px) no-repeat, url('data:image/svg+xml,<%3Fxml version="1.0" encoding="UTF-8"%3F><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="m15.99 5.992-5.711 8.525 11.491 0.032-5.78-8.557z"/><path d="m15.99 25.992-5.711-8.526 11.491-0.032-5.78 8.558z"/></svg>') right / 32px no-repeat, linear-gradient(180deg, rgba(7, 71, 156, 0.75) 0%, rgba(77, 160, 255, 0.75) 1%, rgba(202, 229, 255, 0.75) 4%, rgba(170, 211, 255, 0.75) 29%, rgba(61, 155, 255, 0.75) 31%, rgba(174, 255, 255, 0.75) 99%, rgba(14, 71, 162, 0.75) 100%) right / 32px no-repeat, rgba(255, 255, 255, 0.7);
+        */
 }
+
 
 select:disabled {
     opacity: 0.9;
@@ -388,11 +408,11 @@ select:before {
     left: 50%;
     transform: translateX(-50%);
     height: 33%;
-    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+    /*background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));*/
     width: calc(100% - 0.875em);
-    border-radius: 2em 2em 0.5em 0.5em;
+    /*border-radius: 2em 2em 0.5em 0.5em;*/
     top: 5%;
-    filter: blur(1px);
+    /*filter: blur(1px);*/
     z-index: 2 !important;
 }
 
@@ -405,7 +425,7 @@ select:after {
     height: 33%;
     background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5));
     width: calc(100% - 1.25em);
-    border-radius: 0.75em;
+    /*border-radius: 0.75em;*/
     bottom: 10%;
     filter: blur(3px);
 }
@@ -421,7 +441,6 @@ button::first-line {
     z-index: 1 !important;
     -webkit-text-stroke-width: 0.025em;
     -webkit-text-stroke-color: #000000;
-    text-shadow: 0 0.25em 0.2em rgba(0, 0, 0, 0.25);
 }
 
 @keyframes remi-main-outline-animation {
@@ -436,7 +455,7 @@ button::first-line {
 
 .remi-main .TextInput {
     display: block;
-    font-family: "Lucida Grande", "Lucida Sans", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     padding: 0;
     /*background: 0 0;*/
     text-align: left;
@@ -480,7 +499,7 @@ button::first-line {
     border-bottom: 1px solid rgba(111, 111, 143, 0.5);
     margin: 0px;
     padding: 4px 0 4px 0;
-    font-family: "Lucida Grande", "Lucida Sans", "Helvetica", "Arial", sans-serif;
+    font-family: "Helvetica", "Arial", sans-serif;
     text-align: center;
     margin-top: -8px;
 }
@@ -812,6 +831,9 @@ button::first-line {
 
 .remi-main .Label {
     min-height: 14pt;
+    background-color: #FFFFFF;
+        top: 5%;
+        z-index: 2 !important;
 }
 
 .remi-main .FileFolderItem {

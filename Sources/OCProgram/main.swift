@@ -250,6 +250,23 @@ struct userOrderHistory : CustomStringConvertible {
     }
 }
 
+/// A struct to hold customer information
+struct customerInfo: Codable {
+    var name: String
+    var email: String
+    var address: String
+
+    init(name: String, email: String, address: String) throws {
+        guard !name.isEmpty else { throw WebError(message: "Name cannot be empty.") }
+        guard !email.isEmpty else { throw WebError(message: "Email cannot be empty.") }
+        guard !address.isEmpty else { throw WebError(message: "Address cannot be empty.") }
+        
+        self.name = name
+        self.email = email
+        self.address = address
+    }
+}
+
 /// start of GUI Program
 class SalesWebsiteGUIProgram: OCApp {
 
@@ -274,6 +291,9 @@ class SalesWebsiteGUIProgram: OCApp {
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
+
+    // Store customer information
+    var customer: customerInfo? = nil
     
 
     /// Update labels when new catalogue item is selected by user.
@@ -366,30 +386,63 @@ class SalesWebsiteGUIProgram: OCApp {
             }
         }
     }
-    
+
     /// Method to place order.
     func onOrderButtonClick(button: any OCControlClickable) {
-        do {
-            // Create order.
-            let order: userOrder = try userOrder(cart: self.userCart)
+        // Create a dialog for collecting customer information
+        let customerInfoDialog = OCDialog(title: "Customer Information", message: "Please enter your details.", app: self)
+        
+        // Create fields for customer information
+        let nameField = OCTextField(hint: "Customer Name")
+        let emailField = OCTextField(hint: "Email")
+        let addressField = OCTextField(hint: "Address")
 
-            // Add this order to overall order history.
-            self.orderHistory.addOrder(order: order)
-            let dialog = OCDialog(title: "Success", message: "", app: self)
-            // Show each new line in the order's description as a new label.
-            for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
-                try dialog.addField(key: "\(index)", field: OCLabel(text: line))
+        // Add fields to the dialog
+        try? customerInfoDialog.addField(key: "name", field: nameField)
+        try? customerInfoDialog.addField(key: "email", field: emailField)
+        try? customerInfoDialog.addField(key: "address", field: addressField)
+        
+        // Show the dialog and handle submission
+        customerInfoDialog.onSubmit = { [weak self] in
+            guard let self = self else { return }
+            
+            // Retrieve customer information
+            let name = nameField.text ?? ""
+            let email = emailField.text ?? ""
+            let address = addressField.text ?? ""
+            
+            // Validate customer information (you can expand this as needed)
+            if name.isEmpty || email.isEmpty || address.isEmpty {
+                OCDialog(title: "Error", message: "All fields are required.", app: self).show()
+                return
             }
-            dialog.show()
 
-            // Create new cart.
+        do {
+            // Create order with customer information
+            let order: userOrder = try userOrder(cart: self.userCart, customerName: name, customerEmail: email, customerAddress: address)
+
+            // Add this order to overall order history
+            self.orderHistory.addOrder(order: order)
+            let successDialog = OCDialog(title: "Success", message: "", app: self)
+
+            // Show each new line in the order's description as a new label
+            for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
+                try successDialog.addField(key: "\(index)", field: OCLabel(text: line))
+            }
+            successDialog.show()
+
+            // Create new cart
             self.userCart = Cart()
             self.resetItemsVBox()
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
+                }
             }
         }
+    
+    // Show the customer information dialog
+    customerInfoDialog.show()
     }
 
     /// Main method.
@@ -450,9 +503,9 @@ class SalesWebsiteGUIProgram: OCApp {
 
         // Set up Layout for ImageViews
         var rows: [OCHBox] = []
-        let columns = 10
+        let columns = 5
 
-        for rowIndex in 0..<2 {
+        for rowIndex in 0..<4 {
             var rowItems: [OCImageView] = []
             for columnIndex in 0..<columns {
                 let itemIndex = rowIndex * columns + columnIndex
