@@ -401,25 +401,10 @@ class SalesWebsiteGUIProgram: OCApp {
         try? customerInfoDialog.addField(key: "name", field: nameField)
         try? customerInfoDialog.addField(key: "email", field: emailField)
         try? customerInfoDialog.addField(key: "address", field: addressField)
-        
-        // Show the dialog and handle submission
-        customerInfoDialog.onSubmit = { [weak self] in
-            guard let self = self else { return }
-            
-            // Retrieve customer information
-            let name = nameField.text ?? ""
-            let email = emailField.text ?? ""
-            let address = addressField.text ?? ""
-            
-            // Validate customer information (you can expand this as needed)
-            if name.isEmpty || email.isEmpty || address.isEmpty {
-                OCDialog(title: "Error", message: "All fields are required.", app: self).show()
-                return
-            }
 
         do {
             // Create order with customer information
-            let order: userOrder = try userOrder(cart: self.userCart, customerName: name, customerEmail: email, customerAddress: address)
+            let order: userOrder = try userOrder(cart: self.userCart)
 
             // Add this order to overall order history
             self.orderHistory.addOrder(order: order)
@@ -437,13 +422,12 @@ class SalesWebsiteGUIProgram: OCApp {
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
-                }
             }
         }
-    
     // Show the customer information dialog
     customerInfoDialog.show()
     }
+    
 
     /// Main method.
     override open func main(app: any OCAppDelegate) -> OCControl {
