@@ -288,6 +288,9 @@ class SalesWebsiteGUIProgram: OCApp {
     let orderButton = OCButton(text: "Confirm Order: ")
     var catalogueList: [OCImageView] = []
     let descriptionLabel = OCLabel(text: "") 
+    let showOrderHistoryButton = OCButton(text: "Show Order History")
+    let orderHistoryLabel = OCLabel(text: "")
+
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
@@ -450,7 +453,24 @@ class SalesWebsiteGUIProgram: OCApp {
             customerInfoDialog.show()
         }
     }
-    
+
+     // Method to display order history
+    func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
+        if orderHistory.allOrders.isEmpty {
+            OCDialog(title: "Order History", message: "No orders have been placed yet.", app: self).show()
+            return
+        }
+        let historyDialog = OCDialog(title: "Order History", message: "", app: self)
+        // Show each order as a new line in the dialog
+        for (index, order) in orderHistory.allOrders.enumerated() {
+            do {
+                try historyDialog.addField(key: "\(index)", field: OCLabel(text: order.description))
+            } catch {
+                print("Error adding order to history dialog: \(error)")
+            }
+        }
+        historyDialog.show()
+    }
 
     /// Main method.
     override open func main(app: any OCAppDelegate) -> OCControl {
@@ -531,10 +551,11 @@ class SalesWebsiteGUIProgram: OCApp {
         self.cartListView.onChange(self.onCartListViewChange)
         self.addToCartButton.onClick(self.onAddToCartButtonClick)
         self.orderButton.onClick(self.onOrderButtonClick)
+        self.showOrderHistoryButton.onClick(self.onShowOrderHistoryButtonClick) 
 
         // Set up layout.
         let menuVBox = OCVBox(controls: [self.cartListView, self.descriptionLabel, self.cartPriceLabel, self.addToCartButton])
-        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
+        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton, self.showOrderHistoryButton])
         let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
         return OCVBox(controls: [menuHBox, gridLayout])
     }
