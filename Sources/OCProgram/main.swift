@@ -402,6 +402,29 @@ class SalesWebsiteGUIProgram: OCApp {
         try? customerInfoDialog.addField(key: "email", field: emailField)
         try? customerInfoDialog.addField(key: "address", field: addressField)
 
+        // Get values from the text fields
+        let name = nameField.text
+        let email = emailField.text
+        let address = addressField.text
+
+        if name.isEmpty {
+            OCDialog(title: "Input Error", message: "Name cannot be empty.", app: self).show()
+            customerInfoDialog.show() // Reopen dialog for correction
+            return
+        }
+
+        if email.isEmpty {
+            OCDialog(title: "Input Error", message: "Email cannot be empty.", app: self).show()
+            customerInfoDialog.show() // Reopen dialog for correction
+            return
+        }
+
+            if address.isEmpty {
+            OCDialog(title: "Input Error", message: "Address cannot be empty.", app: self).show()
+            customerInfoDialog.show() // Reopen dialog for correction
+            return
+        }
+
         do {
             // Create order with customer information
             let order: userOrder = try userOrder(cart: self.userCart)
@@ -421,11 +444,11 @@ class SalesWebsiteGUIProgram: OCApp {
             self.resetItemsVBox()
         } catch {
             if let error = error as? WebError {
-                OCDialog(title: "Add error", message: error.message, app: self).show()
+                OCDialog(title: "Error placing order", message: error.message, app: self).show()
             }
+            // Show the customer information dialog
+            customerInfoDialog.show()
         }
-    // Show the customer information dialog
-    customerInfoDialog.show()
     }
     
 
