@@ -257,9 +257,17 @@ struct customerInfo: Codable {
     var address: String
 
     init(name: String, email: String, address: String) throws {
-        guard !name.isEmpty else { throw WebError(message: "Name cannot be empty.") }
-        guard !email.isEmpty else { throw WebError(message: "Email cannot be empty.") }
-        guard !address.isEmpty else { throw WebError(message: "Address cannot be empty.") }
+        guard !name.isEmpty 
+        else { 
+            throw WebError(message: "Name cannot be empty.") 
+            }
+        guard !email.isEmpty 
+        else { throw WebError(message: "Email cannot be empty.") 
+        }
+        guard !address.isEmpty 
+        else 
+        { throw WebError(message: "Address cannot be empty.") 
+        }
         
         self.name = name
         self.email = email
@@ -410,25 +418,8 @@ class SalesWebsiteGUIProgram: OCApp {
         let email = emailField.text
         let address = addressField.text
 
-        if name.isEmpty {
-            OCDialog(title: "Input Error", message: "Name cannot be empty.", app: self).show()
-            customerInfoDialog.show() // Reopen dialog for correction
-            return
-        }
-
-        if email.isEmpty {
-            OCDialog(title: "Input Error", message: "Email cannot be empty.", app: self).show()
-            customerInfoDialog.show() // Reopen dialog for correction
-            return
-        }
-
-            if address.isEmpty {
-            OCDialog(title: "Input Error", message: "Address cannot be empty.", app: self).show()
-            customerInfoDialog.show() // Reopen dialog for correction
-            return
-        }
-
         do {
+            self.customer = try customerInfo(name: name, email: email, address: address)
             // Create order with customer information
             let order: userOrder = try userOrder(cart: self.userCart)
 
@@ -445,6 +436,9 @@ class SalesWebsiteGUIProgram: OCApp {
             // Create new cart
             self.userCart = Cart()
             self.resetItemsVBox()
+
+            // Close the customer info dialog
+            customerInfoDialog.hide()
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Error placing order", message: error.message, app: self).show()
