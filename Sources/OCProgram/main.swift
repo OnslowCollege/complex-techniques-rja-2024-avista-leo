@@ -426,13 +426,11 @@ class SalesWebsiteGUIProgram: OCApp {
     }
 
     /// Collect and validate customer information
-    func collectCustomerInfo() throws {
+    func collectCustomerInfo() throws{
         // Step 1: Collect name
         let nameDialog = OCDialog(title: "Customer Information", message: "", app: self)
         let nameField = OCTextField(hint: "Please enter your name:")
         try nameDialog.addField(key: "name", field: nameField)
-
-        // Show dialog and wait for input
         nameDialog.show()
         let name = nameField.text
         if nameField.text.isEmpty {
@@ -443,8 +441,6 @@ class SalesWebsiteGUIProgram: OCApp {
         let addressDialog = OCDialog(title: "Customer Information", message: "", app: self)
         let addressField = OCTextField(hint: "Please enter your shipping address:")
         try addressDialog.addField(key: "address", field: addressField)
-
-        // Show dialog and wait for input
         addressDialog.show()
         let shippingAddress = addressField.text
         if addressField.text.isEmpty {
@@ -455,8 +451,6 @@ class SalesWebsiteGUIProgram: OCApp {
         let emailDialog = OCDialog(title: "Customer Information", message: "", app: self)
         let emailField = OCTextField(hint: "Please enter your email address:")
         try emailDialog.addField(key: "email", field: emailField)
-
-        // Show dialog and wait for input
         emailDialog.show()
         let emailAddress = emailField.text
         if emailField.text.isEmpty {
@@ -467,8 +461,6 @@ class SalesWebsiteGUIProgram: OCApp {
         let creditCardDialog = OCDialog(title: "Customer Information", message: "", app: self)
         let creditCardField = OCTextField(hint: "Please enter your credit card details:")
         try creditCardDialog.addField(key: "creditCard", field: creditCardField)
-
-        // Show dialog and wait for input
         creditCardDialog.show()
         let creditCardDetails = creditCardField.text
         if creditCardField.text.isEmpty {
