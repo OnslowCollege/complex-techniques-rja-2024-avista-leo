@@ -250,29 +250,12 @@ struct userOrderHistory : CustomStringConvertible {
     }
 }
 
-/// A struct to hold customer information
-struct customerInfo: Codable {
-    var name: String
-    var email: String
-    var address: String
-
-    init(name: String, email: String, address: String) throws {
-        guard !name.isEmpty 
-        else { 
-            throw WebError(message: "Name cannot be empty.") 
-            }
-        guard !email.isEmpty 
-        else { throw WebError(message: "Email cannot be empty.") 
-        }
-        guard !address.isEmpty 
-        else 
-        { throw WebError(message: "Address cannot be empty.") 
-        }
-        
-        self.name = name
-        self.email = email
-        self.address = address
-    }
+/// struct to hold the customer's details
+struct CustomerInfo: Codable {
+    let name: String
+    let shippingAddress: String
+    let emailAddress: String
+    let creditCardDetails: String
 }
 
 /// start of GUI Program
@@ -298,14 +281,11 @@ class SalesWebsiteGUIProgram: OCApp {
     let descriptionLabel = OCLabel(text: "") 
     let showOrderHistoryButton = OCButton(text: "Show Order History")
     let orderHistoryLabel = OCLabel(text: "")
-
+    var customerInfo: CustomerInfo?
+    let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
 
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
-
-    // Store customer information
-    var customer: customerInfo? = nil
-    
 
     /// Update labels when new catalogue item is selected by user.
     func onCartListViewChange(listView: any OCControlChangeable, selected: OCListItem) {
@@ -398,28 +378,9 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-    /// Method to place order.
+     /// Method to place order and collect customer information.
     func onOrderButtonClick(button: any OCControlClickable) {
-        // Create a dialog for collecting customer information
-        let customerInfoDialog = OCDialog(title: "Customer Information", message: "Please enter your details.", app: self)
-        
-        // Create fields for customer information
-        let nameField = OCTextField(hint: "Customer Name")
-        let emailField = OCTextField(hint: "Email")
-        let addressField = OCTextField(hint: "Address")
-
-        // Add fields to the dialog
-        try? customerInfoDialog.addField(key: "name", field: nameField)
-        try? customerInfoDialog.addField(key: "email", field: emailField)
-        try? customerInfoDialog.addField(key: "address", field: addressField)
-
-        // Get values from the text fields
-        let name = nameField.text
-        let email = emailField.text
-        let address = addressField.text
-
         do {
-            self.customer = try customerInfo(name: name, email: email, address: address)
             // Create order with customer information
             let order: userOrder = try userOrder(cart: self.userCart)
 
@@ -433,22 +394,20 @@ class SalesWebsiteGUIProgram: OCApp {
             }
             successDialog.show()
 
+            // Collect customer information after successful order placement
+            try collectCustomerInfo()
+
             // Create new cart
             self.userCart = Cart()
             self.resetItemsVBox()
-
-            // Close the customer info dialog
-            customerInfoDialog.hide()
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Error placing order", message: error.message, app: self).show()
             }
-            // Show the customer information dialog
-            customerInfoDialog.show()
         }
     }
 
-     // Method to display order history
+    // Method to display order history
     func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
         if orderHistory.allOrders.isEmpty {
             OCDialog(title: "Order History", message: "No orders have been placed yet.", app: self).show()
@@ -464,6 +423,75 @@ class SalesWebsiteGUIProgram: OCApp {
             }
         }
         historyDialog.show()
+    }
+
+    /// Collect and validate customer information
+    func collectCustomerInfo() throws {
+        // Step 1: Collect name
+        let nameDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        let nameField = OCTextField(hint: "Please enter your name:")
+        try nameDialog.addField(key: "name", field: nameField)
+
+        // Show dialog and wait for input
+        nameDialog.show()
+        let name = nameField.text
+        if nameField.text.isEmpty {
+            throw WebError(message: "Name field cannot be empty.")
+        }
+
+        // Step 2: Collect shipping address
+        let addressDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        let addressField = OCTextField(hint: "Please enter your shipping address:")
+        try addressDialog.addField(key: "address", field: addressField)
+
+        // Show dialog and wait for input
+        addressDialog.show()
+        let shippingAddress = addressField.text
+        if addressField.text.isEmpty {
+            throw WebError(message: "Shipping address field cannot be empty.")
+        }
+
+        // Step 3: Collect email address
+        let emailDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        let emailField = OCTextField(hint: "Please enter your email address:")
+        try emailDialog.addField(key: "email", field: emailField)
+
+        // Show dialog and wait for input
+        emailDialog.show()
+        let emailAddress = emailField.text
+        if emailField.text.isEmpty {
+            throw WebError(message: "Email address field cannot be empty.")
+        }
+
+        // Step 4: Collect credit card details
+        let creditCardDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
+        try creditCardDialog.addField(key: "creditCard", field: creditCardField)
+
+        // Show dialog and wait for input
+        creditCardDialog.show()
+        let creditCardDetails = creditCardField.text
+        if creditCardField.text.isEmpty {
+            throw WebError(message: "Credit card details field cannot be empty.")
+        }
+
+        // Store valid customer information
+        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+        OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+    }
+
+    /// Method to show the stored customer information when display customer info button is clicked
+    func ondisplayCustomerInfoClick(button: any OCControlClickable) {
+        guard let info = customerInfo else {
+            OCDialog(title: "Error", message: "No customer information available.", app: self).show()
+            return
+        }
+        let infoMessage = """
+        Name: \(info.name)
+        Shipping Address: \(info.shippingAddress)
+        Email: \(info.emailAddress)
+        """
+        OCDialog(title: "Customer Information", message: infoMessage, app: self).show()
     }
 
     /// Main method.
@@ -545,11 +573,12 @@ class SalesWebsiteGUIProgram: OCApp {
         self.cartListView.onChange(self.onCartListViewChange)
         self.addToCartButton.onClick(self.onAddToCartButtonClick)
         self.orderButton.onClick(self.onOrderButtonClick)
-        self.showOrderHistoryButton.onClick(self.onShowOrderHistoryButtonClick) 
+        self.showOrderHistoryButton.onClick(self.onShowOrderHistoryButtonClick)
+        self.displayCustomerInfoButton.onClick (self.ondisplayCustomerInfoClick)
 
         // Set up layout.
         let menuVBox = OCVBox(controls: [self.cartListView, self.descriptionLabel, self.cartPriceLabel, self.addToCartButton])
-        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton, self.showOrderHistoryButton])
+        let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton, self.showOrderHistoryButton, self.displayCustomerInfoButton])
         let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
         return OCVBox(controls: [menuHBox, gridLayout])
     }
