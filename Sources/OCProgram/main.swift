@@ -283,7 +283,7 @@ class SalesWebsiteGUIProgram: OCApp {
     let orderHistoryLabel = OCLabel(text: "")
     var customerInfo: CustomerInfo?
     let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
-
+    
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
 
@@ -370,7 +370,6 @@ class SalesWebsiteGUIProgram: OCApp {
             // Adjust cart's total price to GUI after removing item.
             self.cartPriceLabel.text = self.userCart.totalPriceString
 
-        
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Remove error", message: error.message, app: self).show()
@@ -395,7 +394,7 @@ class SalesWebsiteGUIProgram: OCApp {
             successDialog.show()
 
             // Collect customer information after successful order placement
-            try collectCustomerInfo()
+            try storeCustomerInfo()
 
             // Create new cart
             self.userCart = Cart()
@@ -405,6 +404,71 @@ class SalesWebsiteGUIProgram: OCApp {
                 OCDialog(title: "Error placing order", message: error.message, app: self).show()
             }
         }
+    }
+
+    /// Store customer information
+    func storeCustomerInfo() throws {
+        // Create a dialog for customer information collection
+        let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        
+        // Collect each piece of customer information
+        let name = try collectName(dialog: customerInfoDialog)
+        let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
+        let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
+        let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+
+        // Show the dialog for customer to review and confirm their input
+        customerInfoDialog.show()
+
+        // Store valid customer information
+        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+
+        // Inform the user that the information has been saved successfully
+        OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+    }
+
+    /// Collect the customer's name
+    func collectName(dialog: OCDialog) throws -> String {
+        // Create a text field for name input
+        let nameField = OCTextField(hint: "Please enter your name:")
+        try dialog.addField(key: "name", field: nameField)
+
+        // Get the inputted name
+        let name = nameField.text
+        return name
+    }
+
+    /// Collect the customer's shipping address
+    func collectShippingAddress(dialog: OCDialog) throws -> String {
+        // Create a text field for shipping address input
+        let addressField = OCTextField(hint: "Please enter your shipping address:")
+        try dialog.addField(key: "address", field: addressField)
+        
+        // Get the inputted shipping address
+        let shippingAddress = addressField.text
+        return shippingAddress
+    }
+
+    /// Collect the customer's email address
+    func collectEmailAddress(dialog: OCDialog) throws -> String {
+        // Create a text field for email input
+        let emailField = OCTextField(hint: "Please enter your email address:")
+        try dialog.addField(key: "email", field: emailField)
+        
+        // Get the inputted email address
+        let emailAddress = emailField.text
+        return emailAddress
+    }
+
+    /// Collect the customer's credit card details
+    func collectCreditCardDetails(dialog: OCDialog) throws -> String {
+        // Create a text field for credit card details input
+        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
+        try dialog.addField(key: "creditCard", field: creditCardField)
+        
+        // Get the inputted credit card details
+        let creditCardDetails = creditCardField.text
+        return creditCardDetails
     }
 
     // Method to display order history
@@ -425,56 +489,10 @@ class SalesWebsiteGUIProgram: OCApp {
         historyDialog.show()
     }
 
-    /// Collect and validate customer information
-    func collectCustomerInfo() throws{
-        // Step 1: Collect name
-        let nameDialog = OCDialog(title: "Customer Information", message: "", app: self)
-        let nameField = OCTextField(hint: "Please enter your name:")
-        try nameDialog.addField(key: "name", field: nameField)
-        nameDialog.show()
-        let name = nameField.text
-        if nameField.text.isEmpty {
-            throw WebError(message: "Name field cannot be empty.")
-        }
-
-        // Step 2: Collect shipping address
-        let addressDialog = OCDialog(title: "Customer Information", message: "", app: self)
-        let addressField = OCTextField(hint: "Please enter your shipping address:")
-        try addressDialog.addField(key: "address", field: addressField)
-        addressDialog.show()
-        let shippingAddress = addressField.text
-        if addressField.text.isEmpty {
-            throw WebError(message: "Shipping address field cannot be empty.")
-        }
-
-        // Step 3: Collect email address
-        let emailDialog = OCDialog(title: "Customer Information", message: "", app: self)
-        let emailField = OCTextField(hint: "Please enter your email address:")
-        try emailDialog.addField(key: "email", field: emailField)
-        emailDialog.show()
-        let emailAddress = emailField.text
-        if emailField.text.isEmpty {
-            throw WebError(message: "Email address field cannot be empty.")
-        }
-
-        // Step 4: Collect credit card details
-        let creditCardDialog = OCDialog(title: "Customer Information", message: "", app: self)
-        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
-        try creditCardDialog.addField(key: "creditCard", field: creditCardField)
-        creditCardDialog.show()
-        let creditCardDetails = creditCardField.text
-        if creditCardField.text.isEmpty {
-            throw WebError(message: "Credit card details field cannot be empty.")
-        }
-
-        // Store valid customer information
-        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-        OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
-    }
-
     /// Method to show the stored customer information when display customer info button is clicked
     func ondisplayCustomerInfoClick(button: any OCControlClickable) {
-        guard let info = customerInfo else {
+        guard let info = customerInfo 
+        else {
             OCDialog(title: "Error", message: "No customer information available.", app: self).show()
             return
         }
