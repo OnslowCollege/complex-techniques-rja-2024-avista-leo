@@ -282,7 +282,6 @@ class SalesWebsiteGUIProgram: OCApp {
     let showOrderHistoryButton = OCButton(text: "Show Order History")
     let orderHistoryLabel = OCLabel(text: "")
     var customerInfo: CustomerInfo?
-    var customerInfos: [CustomerInfo] = []
     let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
     
     // Track remove buttons.
@@ -411,7 +410,6 @@ class SalesWebsiteGUIProgram: OCApp {
     func storeCustomerInfo() throws {
         // Create a dialog for customer information collection
         let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
-        let submitButton = OCButton(text: "Submit: ")
         
         // Collect each piece of customer information
         let name = try collectName(dialog: customerInfoDialog)
@@ -422,12 +420,17 @@ class SalesWebsiteGUIProgram: OCApp {
         customerInfoDialog.show()
         // Store valid customer information
         self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-        // Inform the user that the information has been saved successfully
-       func onSubmitButtonClick(any: OCControlClickable) {
-        OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
-       }
-       self.submitButton(self.onSubmitButtonClick)
 
+        let customerInfoArray: [CustomerInfo] = []
+        let encoder = CSVEncoder()
+        if let text = try? encoder.encode(customerInfoArray, into: String.self) 
+        {
+            try? text.write(
+                toFile: "customerInfo.txt",
+                atomically: true,
+                encoding: .utf8
+            )
+        }
     }
 
     /// Collect the customer's name
