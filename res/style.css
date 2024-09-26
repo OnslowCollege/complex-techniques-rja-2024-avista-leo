@@ -835,10 +835,12 @@ button::first-line {
         background-color: #FFFFFF;
         /*top: 5%;*/
         /*z-index: 2 !important;*/
-        border-left: 50px black;
-        border-right: 50px black;
-        border-top: 50px black;
-        border-bottom: 50px black;
+        border-left: 5px solid black;
+            border-right: 5px solid black;
+            border-top: 5px solid black;
+            border-bottom: 5px solid black;
+            margin: 0%;
+            padding: 0%;
 }
 
 .remi-main .FileFolderItem {
