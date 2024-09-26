@@ -418,9 +418,6 @@ func storeCustomerInfo() throws {
     let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
     let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
 
-    // Show the dialog for customer to review and confirm their input
-    customerInfoDialog.show()
-
     // Store valid customer information
     self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
 
@@ -437,9 +434,11 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
     let field = OCTextField(hint: hint)
     try dialog.addField(key: key, field: field)
 
-    // Assume that the dialog is properly handling user input and that the field will return the text
-    dialog.show() // Ensure the dialog is displayed to the user
-    let input = field.text // Get the input after user interaction
+    // Show the dialog to collect user input
+    dialog.show() // This should block until user input is complete
+    
+    // Get the input after the user has entered their information
+    let input = field.text 
 
     // Perform validation if provided
     if let validate = validation, !validate(input) {
@@ -448,6 +447,9 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
     
     return input
 }
+
+
+
 
 
     // Method to display order history
