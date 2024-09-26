@@ -24,12 +24,16 @@ struct CatalogueItem: Codable, CustomStringConvertible {
     /// price of the item in NZD
     let itemPrice: Double
 
+/// product information
+let productInfo: String
+
     /// Create an item with validation
     ///
     /// - Parameters:
     ///     - itemName: name of the item in the catalogue
     ///     - itemPrice: price of the item in the catalogue
-    init(itemName: String, itemPrice: Double, itemImage: String) throws{
+    ///     - productInfo: users can view information about products in the catalogue.
+    init(itemName: String, itemPrice: Double, productInfo: String) throws{
         // if statement to check that itemName is not empty
         if itemName.count > 0 {
             self.itemName = itemName
@@ -45,24 +49,37 @@ struct CatalogueItem: Codable, CustomStringConvertible {
         } else {
             throw WebError(message: "Sorry we do not give out any items for free nor do we pay customers to take our items.")
         }
+// if statement to check that productInfo is not empty
+if productInfo.count > 0 {
+    self.productInfo = productInfo// if productInfo is empty, give the user an error message
+} else {
+    throw WebError(message: "Items in the catalogue require at least one character.")
+}
+
     }
 
     // Conformance to Codable.
     enum CodingKeys : Int, CodingKey {
         case itemName = 0
         case itemPrice = 1
+        case productInfo = 2
     }
 
     /// Catalogue Item's price as a string formatted in NZD
     var priceDescription: String {
         let numberDescription: String = String(format: "%.2f", self.itemPrice)
-return "Balance: $\(numberDescription)"
+        return "$\(numberDescription)"
+    }
 
+    /// Product Description for the user as a string.
+    var productDescription: String {
+        return productInfo
     }
 
     /// Compatibility with CustomStringConvertible
     var itemDescription: String {
-        return "\(self.itemName) .......... \(self.priceDescription)"
+return "\(self.itemName)..... \(self.productInfo).......... \(self.priceDescription)"
+
     }
 
     var description: String {
@@ -128,7 +145,7 @@ for item in self.userItems { GrandTotal = GrandTotal + item.itemPrice }
 
 
         let TotalString: String = String(format: "%.2f", GrandTotal)
-return "Balance: $\(TotalString)"
+return "$\(TotalString)"
 
     }
 
@@ -233,6 +250,14 @@ for order in self.allOrders { builder = builder + order.description + "\n" }
     }
 }
 
+/// struct to hold the customer's details
+struct CustomerInfo: Codable {
+    let name: String
+    let shippingAddress: String
+    let emailAddress: String
+    let creditCardDetails: String
+}
+
 /// start of GUI Program
 class SalesWebsiteGUIProgram: OCApp {
 
@@ -260,8 +285,11 @@ let cartPriceLabel = OCLabel(text: "")
 let orderButton = OCButton(text: "Confirm Order: ")
 var catalogueList: [OCImageView] = []
 
-
-
+let descriptionLabel = OCLabel(text: "")
+let showOrderHistoryButton = OCButton(text: "Show Order History")
+let orderHistoryLabel = OCLabel(text: "")
+var customerInfo: CustomerInfo?
+let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
 // Track remove buttons.
 var totalRemoveButtons: [OCButton] = []
 
@@ -278,6 +306,8 @@ print("No item found in catalogue upon selection.")
 
         // Otherwise, update labels.
         self.priceTag.text = item.priceDescription
+self.descriptionLabel.text = item.productDescription
+
     }
 
     /// Recreate items VBox when anything is added or removed.
@@ -296,7 +326,7 @@ print("No item found in catalogue upon selection.")
             // Add cart item with controls side by side.
             let cartItemHBox = OCHBox(controls: [label, buttonRemove])
             cartItemHBox.width = OCSize.percent(100)
-cartItemHBox.height = OCSize.percent(100)
+cartItemHBox.height = OCSize.pixels(50)
 
             self.cartItemsVBox.append(control: cartItemHBox)
         }
@@ -359,39 +389,125 @@ try self.userCart.removeItem(RemoveItemName: self.userCart.userItems[index].item
 self.cartPriceLabel.text = self.userCart.totalPriceString
 
 
-        
         } catch {
             if let error = error as? WebError {
                 OCDialog(title: "Remove error", message: error.message, app: self).show()
             }
         }
     }
-    
-    /// Method to place order.
+
+/// Method to place order and collect customer information.
+
     func onOrderButtonClick(button: any OCControlClickable) {
         do {
-            // Create order.
+// Create order with customer information
+
             let order: userOrder = try userOrder(cart: self.userCart)
 
-// Add this order to overall order history.
+// Add this order to overall order history
 self.orderHistory.addOrder(order: order)
-let dialog = OCDialog(title: "Success", message: "", app: self)
-// Show each new line in the order's description as a new label.
-for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
-    try dialog.addField(key: "\(index)", field: OCLabel(text: line))
-}
-dialog.hide()
+
+            let successDialog = OCDialog(title: "Success", message: "", app: self)
+
+            // Show each new line in the order's description as a new label
+            for (index, line) in order.description.components(separatedBy: "\n").enumerated() {
+                try successDialog.addField(key: "\(index)", field: OCLabel(text: line))
+            }
+successDialog.show()
 
 
+// Collect customer information after successful order placement
+try storeCustomerInfo()
 
-            // Create new cart.
+
+// Create new cart
+
             self.userCart = Cart()
             self.resetItemsVBox()
         } catch {
             if let error = error as? WebError {
-                OCDialog(title: "Add error", message: error.message, app: self).show()
+                OCDialog(title: "Error placing order", message: error.message, app: self).show()
             }
         }
+    }
+
+func storeCustomerInfo() throws {
+    // Create a dialog for customer information collection
+    let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
+
+    // Collect each piece of customer information
+    let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
+    let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
+    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
+    let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
+
+    // Show the dialog for customer to review and confirm their input
+    customerInfoDialog.show()
+
+    // Wait for user to interact with the dialog and complete input
+    //try customerInfoDialog.waitForUserInput() // Add a method to handle this
+
+    // Store valid customer information after user confirms the dialog
+    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+
+    // Inform the user that the information has been saved successfully
+    OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+}
+
+/// Collect a field from the user with optional validation
+func collectField(dialog: OCDialog, hint: String, key: String, validation: ((String) -> Bool)? = nil) throws -> String {
+    let field = OCTextField(hint: hint)
+    try dialog.addField(key: key, field: field)
+
+    // Wait for user input (simulated or actual event-driven)
+    //let input = field.getInputFromUser() // Simulate this with a function or real-time event
+
+
+    let input = field.text
+
+    if let validate = validation, !validate(input) {
+        throw NSError(domain: "InputError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid input for \(key)"])
+    }
+
+    return input
+}
+
+
+
+
+
+    // Method to display order history
+    func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
+        if orderHistory.allOrders.isEmpty {
+            OCDialog(title: "Order History", message: "No orders have been placed yet.", app: self).show()
+            return
+        }
+        let historyDialog = OCDialog(title: "Order History", message: "", app: self)
+        // Show each order as a new line in the dialog
+        for (index, order) in orderHistory.allOrders.enumerated() {
+            do {
+                try historyDialog.addField(key: "\(index)", field: OCLabel(text: order.description))
+            } catch {
+                print("Error adding order to history dialog: \(error)")
+            }
+        }
+        historyDialog.show()
+    }
+
+    /// Method to show the stored customer information when display customer info button is clicked
+    func ondisplayCustomerInfoClick(button: any OCControlClickable) {
+        guard let info = customerInfo 
+        else {
+            OCDialog(title: "Error", message: "No customer information available.", app: self).show()
+            return
+        }
+let infoMessage = """
+    Name: \(info.name)
+    Shipping Address: \(info.shippingAddress)
+    Email: \(info.emailAddress)
+    """
+OCDialog(title: "Customer Information", message: infoMessage, app: self).show()
+
     }
 
     /// Main method.
@@ -409,7 +525,8 @@ dialog.hide()
             exit(0)
         }
 
-        // Set menu.
+// Set catalogue.
+
         guard let menu = try? Catalogue(availableItems: catalogueItems) else {
 print("Cannot create catalogue.")
 
@@ -482,14 +599,18 @@ self.addToCartButton.onClick(self.onAddToCartButtonClick)
 
 self.orderButton.onClick(self.onOrderButtonClick)
 
+self.showOrderHistoryButton.onClick(self.onShowOrderHistoryButtonClick)
+self.displayCustomerInfoButton.onClick(self.ondisplayCustomerInfoClick)
+
 
         // Set up layout.
-let menuVBox = OCVBox(controls: [self.cartListView, self.cartPriceLabel, self.addToCartButton])
-let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton])
-
+let menuVBox = OCVBox(controls: [self.cartListView, self.descriptionLabel, self.cartPriceLabel, self.addToCartButton])
+let cartVBox = OCVBox(controls: [
+    self.cartItemsVBox, self.cartPriceLabel, self.orderButton, self.showOrderHistoryButton,
+    self.displayCustomerInfoButton,
+])
 let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
 return OCVBox(controls: [menuHBox, gridLayout])
-
 
     }
 }
