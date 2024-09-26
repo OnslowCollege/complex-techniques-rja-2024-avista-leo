@@ -237,6 +237,7 @@ html {
     flex-direction: none !important;
     align-items: start !important;
         width: 100%;
+        border-radius: 0.1em 0.1em 0.1em 0.1em;
 }
 
 body> :nth-of-type(2) {
@@ -273,6 +274,7 @@ body> :nth-of-type(2) {
     background-color: rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, .1);
     height: 100%;
+    border-radius: 0.1em 0.1em 0.1em 0.1em;
         /*justify-content: start !important;*/
 }
 
@@ -384,6 +386,7 @@ select {
     overflow: hidden;
     cursor: default;
     outline: none;
+    border-radius: 0.1em 0.1em 0.1em 0.1em;
     /*background: linear-gradient(rgba(160, 160, 160, 0.625), rgba(255, 255, 255, 0.625));*/
         box-shadow: 0 0.375em 0.5em rgba(0, 0, 0, 0.2), 0 0.125em 0.125em rgba(0, 0, 0, 0.3), inset 0 0.25em 0.25em rgba(0, 0, 0, 0.4), inset 0 0.375em 0.5em 0.25em #BBBBBB;
 }
@@ -835,12 +838,12 @@ button::first-line {
     min-height: 25px;
         background-color: #FFFFFF;
         background-size: 200%;
-        border-left: 5px solid black;
-            border-right: 5px solid black;
-            border-top: 5px solid black;
-            border-bottom: 5px solid black;
+        border-left: 5px solid lightslategray;
+            border-right: 5px solid lightslategray;
+            border-top: 5px solid lightslategray;
+            border-bottom: 5px solid lightslategray;
             text-align: center;
-            border-radius: 1em 1em 1em 1em;
+            border-radius: 0.1em 0.1em 0.1em 0.1em;
 }
 
 .remi-main .FileFolderItem {
