@@ -33,13 +33,14 @@ img {
     width: 175px;
     height: auto;
     background-color: #FFFFFF;
-    background-size: 120%;
     border: blue;
-    border-bottom: 20px solid lightslategray;
-        border-right: 20px solid lightslategray;
-        border-left: 20px solid lightslategray;
-        border-top: 20px solid lightslategray;
-    ;
+    border-bottom: 15px solid lightslategray;
+        border-right: 15px solid lightslategray;
+        border-left: 15px solid lightslategray;
+        border-top: 15px solid lightslategray;
+        border-radius: 0.3em 0.3em 0.3em 0.3em;
+        margin: auto;
+        padding: 3%;
     /*box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .14)*/
 }
 .remi-main svg,
