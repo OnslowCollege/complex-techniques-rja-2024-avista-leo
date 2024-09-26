@@ -282,6 +282,7 @@ class SalesWebsiteGUIProgram: OCApp {
     let showOrderHistoryButton = OCButton(text: "Show Order History")
     let orderHistoryLabel = OCLabel(text: "")
     var customerInfo: CustomerInfo?
+    var customerInfos: [CustomerInfo] = []
     let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
     
     // Track remove buttons.
@@ -406,50 +407,71 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-func storeCustomerInfo() throws {
-    // Create a dialog for customer information collection
-    let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
+    /// Store customer information
+    func storeCustomerInfo() throws {
+        // Create a dialog for customer information collection
+        let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        let submitButton = OCButton(text: "Submit: ")
+        
+        // Collect each piece of customer information
+        let name = try collectName(dialog: customerInfoDialog)
+        let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
+        let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
+        let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+        // Show the dialog for customer to review and confirm their input
+        customerInfoDialog.show()
+        // Store valid customer information
+        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+        // Inform the user that the information has been saved successfully
+       func onSubmitButtonClick(any: OCControlClickable) {
+        OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+       }
+       self.submitButton(self.onSubmitButtonClick)
 
-    // Collect each piece of customer information
-    let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
-    let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
-    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
-    let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
-
-    // Show the dialog for customer to review and confirm their input
-    customerInfoDialog.show()
-
-    // Wait for user to interact with the dialog and complete input
-    //try customerInfoDialog.waitForUserInput() // Add a method to handle this
-
-    // Store valid customer information after user confirms the dialog
-    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-
-    // Inform the user that the information has been saved successfully
-    OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
-}
-
-/// Collect a field from the user with optional validation
-func collectField(dialog: OCDialog, hint: String, key: String, validation: ((String) -> Bool)? = nil) throws -> String {
-    let field = OCTextField(hint: hint)
-    try dialog.addField(key: key, field: field)
-
-    // Wait for user input (simulated or actual event-driven)
-    //let input = field.getInputFromUser() // Simulate this with a function or real-time event
-
-
-    let input = field.text
-
-    if let validate = validation, !validate(input) {
-        throw NSError(domain: "InputError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid input for \(key)"])
     }
 
-    return input
-}
+    /// Collect the customer's name
+    func collectName(dialog: OCDialog) throws -> String {
+        // Create a text field for name input
+        let nameField = OCTextField(hint: "Please enter your name:")
+        try dialog.addField(key: "name", field: nameField)
+        // Get the inputted name
+        let name = nameField.text
+        return name
+    }
 
+    /// Collect the customer's shipping address
+    func collectShippingAddress(dialog: OCDialog) throws -> String {
+        // Create a text field for shipping address input
+        let addressField = OCTextField(hint: "Please enter your shipping address:")
+        try dialog.addField(key: "address", field: addressField)
+        
+        // Get the inputted shipping address
+        let shippingAddress = addressField.text
+        return shippingAddress
+    }
 
+    /// Collect the customer's email address
+    func collectEmailAddress(dialog: OCDialog) throws -> String {
+        // Create a text field for email input
+        let emailField = OCTextField(hint: "Please enter your email address:")
+        try dialog.addField(key: "email", field: emailField)
+        
+        // Get the inputted email address
+        let emailAddress = emailField.text
+        return emailAddress
+    }
 
-
+    /// Collect the customer's credit card details
+    func collectCreditCardDetails(dialog: OCDialog) throws -> String {
+        // Create a text field for credit card details input
+        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
+        try dialog.addField(key: "creditCard", field: creditCardField)
+        
+        // Get the inputted credit card details
+        let creditCardDetails = creditCardField.text
+        return creditCardDetails
+    }
 
     // Method to display order history
     func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
@@ -471,15 +493,15 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
 
     /// Method to show the stored customer information when display customer info button is clicked
     func ondisplayCustomerInfoClick(button: any OCControlClickable) {
-        guard let info = customerInfo 
+        guard let customerInfo = customerInfo
         else {
             OCDialog(title: "Error", message: "No customer information available.", app: self).show()
             return
         }
         let infoMessage = """
-        Name: \(info.name)
-        Shipping Address: \(info.shippingAddress)
-        Email: \(info.emailAddress)
+        Name: \(customerInfo.name)
+        Shipping Address: \(customerInfo.shippingAddress)
+        Email: \(customerInfo.emailAddress)
         """
         OCDialog(title: "Customer Information", message: infoMessage, app: self).show()
     }
@@ -564,6 +586,7 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
         self.addToCartButton.onClick(self.onAddToCartButtonClick)
         self.orderButton.onClick(self.onOrderButtonClick)
         self.showOrderHistoryButton.onClick(self.onShowOrderHistoryButtonClick)
+        
         self.displayCustomerInfoButton.onClick (self.ondisplayCustomerInfoClick)
 
         // Set up layout.
