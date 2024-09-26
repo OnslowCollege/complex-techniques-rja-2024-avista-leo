@@ -231,11 +231,11 @@ html {
 .remi-main .HBox {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
-    column-gap: 24px;
+    column-gap: 0px;
     justify-content: none !important;
     display: grid !important;
     flex-direction: none !important;
-    align-items: center;
+    align-items: start !important;
         width: 100%;
 }
 
