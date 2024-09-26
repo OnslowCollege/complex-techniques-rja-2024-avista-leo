@@ -832,10 +832,13 @@ button::first-line {
 
 .remi-main .Label {
     min-height: 14pt;
-    background-color: #FFFFFF;
+    background-color: #000000;
         top: 5%;
         z-index: 2 !important;
-    border: 2px black;
+    border-left: 5px black;
+        border-right: 5px black;
+        border-top: 5px black;
+        border-bottom: 5px black;
 }
 
 .remi-main .FileFolderItem {
