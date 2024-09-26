@@ -302,7 +302,6 @@ body> :nth-of-type(2) {
     overflow: auto;
     list-style: none;
     min-width: 100px;
-    box-shadow: inset 1px 1px #999;
     resize: horizontal;
     margin: 0;
     font-family: "Helvetica", "Arial", sans-serif;
@@ -315,8 +314,8 @@ body> :nth-of-type(2) {
 }
 
 .remi-main .ListItem {
-    background-color: transparent;
-    border-bottom: transparent;
+    background-color: #FFFFFF;
+        border: 2px black;
     margin: 4px;
     padding: 4px;
     min-width: calc(100% - 8px);
