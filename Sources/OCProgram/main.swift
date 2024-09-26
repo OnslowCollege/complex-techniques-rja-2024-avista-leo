@@ -413,7 +413,7 @@ class SalesWebsiteGUIProgram: OCApp {
     // Collect each piece of customer information
     let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
     let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
-    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email", validation: validateEmail)
+    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
     let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
 
     // Show the dialog for customer to review and confirm their input
