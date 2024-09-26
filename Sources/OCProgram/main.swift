@@ -413,48 +413,82 @@ func storeCustomerInfo() {
     let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
     
     // Collect all pieces of customer information asynchronously
-    collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name") { result in
-        switch result {
-        case .success(let name):
-            self.collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address") { result in
-                switch result {
-                case .success(let shippingAddress):
-                    self.collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email") { result in
+    do {
+        try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name") { result in
+            switch result {
+            case .success(let name):
+                do {
+                    try self.collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address") { result in
                         switch result {
-                        case .success(let emailAddress):
-                            self.collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard") { result in
-                                switch result {
-                                case .success(let creditCardDetails):
-                                    // Store valid customer information
-                                    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-                                    
-                                    // Now display the success message
-                                    let successMessage = "Customer information saved successfully!\n\n" +
-                                                         "Name: \(name)\n" +
-                                                         "Address: \(shippingAddress)\n" +
-                                                         "Email: \(emailAddress)"
-                                    OCDialog(title: "Success", message: successMessage, app: self).show()
-                                case .failure(let error):
-                                    // Handle error
-                                    print("Error collecting credit card details: \(error)")
+                        case .success(let shippingAddress):
+                            do {
+                                try self.collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email") { result in
+                                    switch result {
+                                    case .success(let emailAddress):
+                                        do {
+                                            try self.collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard") { result in
+                                                switch result {
+                                                case .success(let creditCardDetails):
+                                                    // Store valid customer information
+                                                    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+                                                    
+                                                    // Now display the success message
+                                                    let successMessage = "Customer information saved successfully!\n\n" +
+                                                                         "Name: \(name)\n" +
+                                                                         "Address: \(shippingAddress)\n" +
+                                                                         "Email: \(emailAddress)"
+                                                    OCDialog(title: "Success", message: successMessage, app: self).show()
+                                                case .failure(let error):
+                                                    // Handle error
+                                                    print("Error collecting credit card details: \(error)")
+                                                }
+                                            }
+                                        } catch {
+                                            print("Error collecting credit card details: \(error)")
+                                        }
+                                    case .failure(let error):
+                                        // Handle error
+                                        print("Error collecting email address: \(error)")
+                                    }
                                 }
+                            } catch {
+                                print("Error collecting email address: \(error)")
                             }
                         case .failure(let error):
                             // Handle error
-                            print("Error collecting email address: \(error)")
+                            print("Error collecting shipping address: \(error)")
                         }
                     }
-                case .failure(let error):
-                    // Handle error
+                } catch {
                     print("Error collecting shipping address: \(error)")
                 }
+            case .failure(let error):
+                // Handle error
+                print("Error collecting name: \(error)")
             }
-        case .failure(let error):
-            // Handle error
-            print("Error collecting name: \(error)")
         }
+    } catch {
+        print("Error collecting name: \(error)")
     }
 }
+
+/// Collect a field from the user with optional validation
+func collectField(dialog: OCDialog, hint: String, key: String, validation: ((String) -> Bool)? = nil, completion: @escaping (Result<String, Error>) -> Void) throws {
+    let field = OCTextField(hint: hint)
+    try dialog.addField(key: key, field: field)
+    
+    // Show the dialog to collect user input
+    dialog.show {userInput in
+        if let validation = validation, !validation(userInput) {
+            completion(.failure(NSError(domain: "InvalidInput", code: 1, userInfo: nil)))
+            } 
+        else {
+            completion(.success(userInput))
+            }
+     }
+}
+
+
 
     // Method to display order history
     func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
