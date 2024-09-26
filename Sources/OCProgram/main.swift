@@ -260,18 +260,17 @@ struct CustomerInfo: Codable {
     /// Store customer information in txt file (customerInfo.txt)
     func storeCustomerInfo(app: OCApp) throws {
         let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)
+        func onConfirm(_ function: @escaping (any OCControlClickable) -> (Void)) throws {
+            let name = try collectName(dialog: customerInfoDialog)
+            let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
+            let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
+            let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+            customerInfoDialog.show()
+            let customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
 
-        let name = try collectName(dialog: customerInfoDialog)
-        let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
-        let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
-        let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
-
-        customerInfoDialog.show()
-
-        let customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-
-        try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
-        print("Customer information saved to CSV file successfully.")
+            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
+            print("Customer information saved to CSV file successfully.")
+        }
     }
 
     /// Save customer information to CSV file
@@ -457,6 +456,7 @@ class SalesWebsiteGUIProgram: OCApp {
             successDialog.show()
 
             // Create an instance of CustomerInfo to collect and save customer information
+            
             let customerInfo = CustomerInfo(name: "", shippingAddress: "", emailAddress: "", creditCardDetails: "")
             try customerInfo.storeCustomerInfo(app: self)
 
