@@ -406,7 +406,9 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-    func storeCustomerInfo() throws {
+
+/// Store customer information
+func storeCustomerInfo() throws {
     // Create a dialog for customer information collection
     let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
 
@@ -423,7 +425,11 @@ class SalesWebsiteGUIProgram: OCApp {
     self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
 
     // Inform the user that the information has been saved successfully
-    OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+    let successMessage = "Customer information saved successfully!\n\n" +
+                         "Name: \(name)\n" +
+                         "Address: \(shippingAddress)\n" +
+                         "Email: \(emailAddress)"
+    OCDialog(title: "Success", message: successMessage, app: self).show()
 }
 
 /// Collect a field from the user with optional validation
@@ -431,7 +437,11 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
     let field = OCTextField(hint: hint)
     try dialog.addField(key: key, field: field)
 
-    let input = field.text
+    // Assume that the dialog is properly handling user input and that the field will return the text
+    dialog.show() // Ensure the dialog is displayed to the user
+    let input = field.text // Get the input after user interaction
+
+    // Perform validation if provided
     if let validate = validation, !validate(input) {
         throw NSError(domain: "InputError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid input for \(key)"])
     }
@@ -439,16 +449,6 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
     return input
 }
 
-    /// Collect the customer's credit card details
-    func collectCreditCardDetails(dialog: OCDialog) throws -> String {
-        // Create a text field for credit card details input
-        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
-        try dialog.addField(key: "creditCard", field: creditCardField)
-        
-        // Get the inputted credit card details
-        let creditCardDetails = creditCardField.text
-        return creditCardDetails
-    }
 
     // Method to display order history
     func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
