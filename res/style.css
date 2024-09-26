@@ -835,6 +835,7 @@ button::first-line {
     background-color: #FFFFFF;
         top: 5%;
         z-index: 2 !important;
+    border: 2px black;
 }
 
 .remi-main .FileFolderItem {
