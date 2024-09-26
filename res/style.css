@@ -235,8 +235,8 @@ html {
     justify-content: none !important;
     display: grid !important;
     flex-direction: none !important;
-    align-items: start !important;
-    height: 750px;
+    align-items: center;
+        width: 100%;
 }
 
 body> :nth-of-type(2) {
