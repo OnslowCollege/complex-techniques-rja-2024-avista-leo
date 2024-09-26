@@ -411,8 +411,8 @@ class SalesWebsiteGUIProgram: OCApp {
 func storeCustomerInfo() throws {
     // Create a dialog for customer information collection
     let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
-
-    // Collect each piece of customer information
+    
+    // Collect all pieces of customer information
     let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
     let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
     let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
@@ -421,7 +421,7 @@ func storeCustomerInfo() throws {
     // Store valid customer information
     self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
 
-    // Inform the user that the information has been saved successfully
+    // Now display the success message
     let successMessage = "Customer information saved successfully!\n\n" +
                          "Name: \(name)\n" +
                          "Address: \(shippingAddress)\n" +
@@ -435,10 +435,10 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
     try dialog.addField(key: key, field: field)
 
     // Show the dialog to collect user input
-    dialog.show() // This should block until user input is complete
-    
+    dialog.show() // This should wait for user input
+
     // Get the input after the user has entered their information
-    let input = field.text 
+    let input = field.text
 
     // Perform validation if provided
     if let validate = validation, !validate(input) {
@@ -447,8 +447,6 @@ func collectField(dialog: OCDialog, hint: String, key: String, validation: ((Str
     
     return input
 }
-
-
 
 
 
