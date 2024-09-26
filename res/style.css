@@ -836,6 +836,7 @@ button::first-line {
 
 .remi-main .Label {
     min-height: 25px;
+    min-width: 125px;
         background-color: #FFFFFF;
         background-size: 200%;
         border-left: 5px solid lightslategray;
