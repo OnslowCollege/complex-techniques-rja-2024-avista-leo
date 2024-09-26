@@ -276,11 +276,11 @@ struct CustomerInfo: Codable {
 
     /// Save customer information to CSV file
     func saveCustomerInfoToCSV(customerInfo: CustomerInfo, fileName: String) throws {
-        let fileURL = URL(fileURLWithPath: fileName)
-        let header = "Name,Shipping Address,Email Address,Credit Card Details\n"
+        let fileURL = URL(fileURLWithPath: "customerInfo.txt")
+        let header = "Name, Shipping Address, Email Address, Credit Card Details\n"
         let customerData = "\(customerInfo.name),\(customerInfo.shippingAddress),\(customerInfo.emailAddress),\(customerInfo.creditCardDetails)\n"
-
-        if !FileManager.default.fileExists(atPath: fileName) {
+        
+        if !FileManager.default.fileExists(atPath: "customerInfo.txt") {
             try header.write(to: fileURL, atomically: true, encoding: .utf8)
         }
 
@@ -320,8 +320,6 @@ struct CustomerInfo: Codable {
         return creditCardField.text
     }
 }
-
-
 
 /// start of GUI Program
 class SalesWebsiteGUIProgram: OCApp {
@@ -458,7 +456,9 @@ class SalesWebsiteGUIProgram: OCApp {
             }
             successDialog.show()
 
-            // Collect customer information after successful order placement
+            // Create an instance of CustomerInfo to collect and save customer information
+            let customerInfo = CustomerInfo(name: "", shippingAddress: "", emailAddress: "", creditCardDetails: "")
+            try customerInfo.storeCustomerInfo(app: self)
 
             // Create new cart
             self.userCart = Cart()
@@ -469,7 +469,6 @@ class SalesWebsiteGUIProgram: OCApp {
             }
         }
     }
-
 
     // Method to display order history
     func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
@@ -492,26 +491,25 @@ class SalesWebsiteGUIProgram: OCApp {
     /// Method to show the stored customer information when display customer info button is clicked
     func ondisplayCustomerInfoClick(button: any OCControlClickable) {
         /// Load customer information from a CSV file using the CSVDecoder
-        static func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
+        func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
             let decoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
 
             // Read in the file content
             guard let customerInfoText = try? String(contentsOfFile: fileName) else {
-                print("Cannot load \(customerInfo.txt)")
+                print("Cannot load \("customerInfo.txt")")
                 exit(0)
             }
 
             // Decode CSV content into an array of CustomerInfo
             guard let customerInfoArray = try? decoder.decode([CustomerInfo].self, from: customerInfoText) else {
-                print("Cannot decode \(customerInfo.txt).")
+                print("Cannot decode \("customerInfo.txt").")
                 exit(0)
             }
-
             return customerInfoArray
         }
         /// Example usage to load customer info from file
         do {
-            let customerInfoArray = try CustomerInfo.loadCustomerInfoFromCSV(fileName: "customerInfo.txt")
+            let customerInfoArray = try loadCustomerInfoFromCSV(fileName: "customerInfo.txt")
             print(customerInfoArray) // This will print the loaded customer info
         } catch {
             print("Error loading customer info: \(error)")
@@ -598,7 +596,6 @@ class SalesWebsiteGUIProgram: OCApp {
         self.addToCartButton.onClick(self.onAddToCartButtonClick)
         self.orderButton.onClick(self.onOrderButtonClick)
         self.showOrderHistoryButton.onClick(self.onShowOrderHistoryButtonClick)
-        
         self.displayCustomerInfoButton.onClick (self.ondisplayCustomerInfoClick)
 
         // Set up layout.
