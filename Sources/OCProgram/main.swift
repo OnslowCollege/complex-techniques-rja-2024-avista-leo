@@ -408,47 +408,53 @@ class SalesWebsiteGUIProgram: OCApp {
 
 
 /// Store customer information
-func storeCustomerInfo() throws {
+func storeCustomerInfo() {
     // Create a dialog for customer information collection
     let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
     
-    // Collect all pieces of customer information
-    let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
-    let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
-    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
-    let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
-
-    // Store valid customer information
-    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-
-    // Now display the success message
-    let successMessage = "Customer information saved successfully!\n\n" +
-                         "Name: \(name)\n" +
-                         "Address: \(shippingAddress)\n" +
-                         "Email: \(emailAddress)"
-    OCDialog(title: "Success", message: successMessage, app: self).show()
-}
-
-/// Collect a field from the user with optional validation
-func collectField(dialog: OCDialog, hint: String, key: String, validation: ((String) -> Bool)? = nil) throws -> String {
-    let field = OCTextField(hint: hint)
-    try dialog.addField(key: key, field: field)
-
-    // Show the dialog to collect user input
-    dialog.show() // This should wait for user input
-
-    // Get the input after the user has entered their information
-    let input = field.text
-
-    // Perform validation if provided
-    if let validate = validation, !validate(input) {
-        throw NSError(domain: "InputError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid input for \(key)"])
+    // Collect all pieces of customer information asynchronously
+    collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name") { result in
+        switch result {
+        case .success(let name):
+            self.collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address") { result in
+                switch result {
+                case .success(let shippingAddress):
+                    self.collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email") { result in
+                        switch result {
+                        case .success(let emailAddress):
+                            self.collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard") { result in
+                                switch result {
+                                case .success(let creditCardDetails):
+                                    // Store valid customer information
+                                    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+                                    
+                                    // Now display the success message
+                                    let successMessage = "Customer information saved successfully!\n\n" +
+                                                         "Name: \(name)\n" +
+                                                         "Address: \(shippingAddress)\n" +
+                                                         "Email: \(emailAddress)"
+                                    OCDialog(title: "Success", message: successMessage, app: self).show()
+                                case .failure(let error):
+                                    // Handle error
+                                    print("Error collecting credit card details: \(error)")
+                                }
+                            }
+                        case .failure(let error):
+                            // Handle error
+                            print("Error collecting email address: \(error)")
+                        }
+                    }
+                case .failure(let error):
+                    // Handle error
+                    print("Error collecting shipping address: \(error)")
+                }
+            }
+        case .failure(let error):
+            // Handle error
+            print("Error collecting name: \(error)")
+        }
     }
-    
-    return input
 }
-
-
 
     // Method to display order history
     func onShowOrderHistoryButtonClick(button: any OCControlClickable) {
