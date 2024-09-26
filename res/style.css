@@ -831,14 +831,14 @@ button::first-line {
 }
 
 .remi-main .Label {
-    min-height: 14pt;
-    background-color: #000000;
-        top: 5%;
-        z-index: 2 !important;
-    border-left: 5px black;
-        border-right: 5px black;
-        border-top: 5px black;
-        border-bottom: 5px black;
+    /*min-height: 14pt;*/
+        background-color: #FFFFFF;
+        /*top: 5%;*/
+        /*z-index: 2 !important;*/
+        border-left: 50px black;
+        border-right: 50px black;
+        border-top: 50px black;
+        border-bottom: 50px black;
 }
 
 .remi-main .FileFolderItem {
