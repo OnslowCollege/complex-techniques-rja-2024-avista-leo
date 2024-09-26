@@ -230,6 +230,7 @@ html {
 
 .remi-main .HBox {
     grid-auto-flow: column;
+    grid-auto-columns: 1fr;
     column-gap: 0px;
     justify-content: none !important;
     display: grid !important;
@@ -265,6 +266,7 @@ body> :nth-of-type(2) {
 
 .remi-main .VBox {
     grid-auto-flow: row;
+    grid-auto-rows: 1fr;
     row-gap: 16px;
     border-radius: 6px;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -830,14 +832,16 @@ button::first-line {
 }
 
 .remi-main .Label {
-    /*min-height: 14pt;*/
+    min-height: 25px;
         background-color: #FFFFFF;
+        background-size: 200%;
         /*top: 5%;*/
         /*z-index: 2 !important;*/
         border-left: 5px solid black;
             border-right: 5px solid black;
             border-top: 5px solid black;
             border-bottom: 5px solid black;
+            text-align: center;
 }
 
 .remi-main .FileFolderItem {
