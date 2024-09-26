@@ -33,11 +33,12 @@ img {
     width: 175px;
     height: auto;
     background-color: #FFFFFF;
+    background-size: 120%;
     border: blue;
-    border-bottom: 20px solid #FFFFFF;
-    border-right: 20px solid #FFFFFF;
-    border-left: 20px solid #FFFFFF;
-    border-top: 20px solid #FFFFFF;
+    border-bottom: 20px solid lightslategray;
+        border-right: 20px solid lightslategray;
+        border-left: 20px solid lightslategray;
+        border-top: 20px solid lightslategray;
     ;
     /*box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .14)*/
 }
