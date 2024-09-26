@@ -406,59 +406,38 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-    /// Store customer information
     func storeCustomerInfo() throws {
-        // Create a dialog for customer information collection
-        let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
-        
-        // Collect each piece of customer information
-        let name = try collectName(dialog: customerInfoDialog)
-        let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
-        let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
-        let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+    // Create a dialog for customer information collection
+    let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
 
-        // Show the dialog for customer to review and confirm their input
-        customerInfoDialog.show()
+    // Collect each piece of customer information
+    let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
+    let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
+    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email", validation: validateEmail)
+    let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
 
-        // Store valid customer information
-        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+    // Show the dialog for customer to review and confirm their input
+    customerInfoDialog.show()
 
-        // Inform the user that the information has been saved successfully
-        OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+    // Store valid customer information
+    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+
+    // Inform the user that the information has been saved successfully
+    OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
+}
+
+/// Collect a field from the user with optional validation
+func collectField(dialog: OCDialog, hint: String, key: String, validation: ((String) -> Bool)? = nil) throws -> String {
+    let field = OCTextField(hint: hint)
+    try dialog.addField(key: key, field: field)
+
+    let input = field.text
+    if let validate = validation, !validate(input) {
+        throw NSError(domain: "InputError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid input for \(key)"])
     }
-
-    /// Collect the customer's name
-    func collectName(dialog: OCDialog) throws -> String {
-        // Create a text field for name input
-        let nameField = OCTextField(hint: "Please enter your name:")
-        try dialog.addField(key: "name", field: nameField)
-
-        // Get the inputted name
-        let name = nameField.text
-        return name
-    }
-
-    /// Collect the customer's shipping address
-    func collectShippingAddress(dialog: OCDialog) throws -> String {
-        // Create a text field for shipping address input
-        let addressField = OCTextField(hint: "Please enter your shipping address:")
-        try dialog.addField(key: "address", field: addressField)
-        
-        // Get the inputted shipping address
-        let shippingAddress = addressField.text
-        return shippingAddress
-    }
-
-    /// Collect the customer's email address
-    func collectEmailAddress(dialog: OCDialog) throws -> String {
-        // Create a text field for email input
-        let emailField = OCTextField(hint: "Please enter your email address:")
-        try dialog.addField(key: "email", field: emailField)
-        
-        // Get the inputted email address
-        let emailAddress = emailField.text
-        return emailAddress
-    }
+    
+    return input
+}
 
     /// Collect the customer's credit card details
     func collectCreditCardDetails(dialog: OCDialog) throws -> String {
