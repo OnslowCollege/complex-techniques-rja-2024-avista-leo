@@ -406,48 +406,45 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-
-/// Store customer information
-func storeCustomerInfo() {
+func storeCustomerInfo() throws {
     // Create a dialog for customer information collection
     let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
-    
-    do {
-        let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
-        let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
-        let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
-        let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
 
-        // Store valid customer information
-        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+    // Collect each piece of customer information
+    let name = try collectField(dialog: customerInfoDialog, hint: "Please enter your name:", key: "name")
+    let shippingAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your shipping address:", key: "address")
+    let emailAddress = try collectField(dialog: customerInfoDialog, hint: "Please enter your email address:", key: "email")
+    let creditCardDetails = try collectField(dialog: customerInfoDialog, hint: "Please enter your credit card details:", key: "creditCard")
 
-        // Now display the success message
-        let successMessage = "Customer information saved successfully!\n\n" +
-                             "Name: \(name)\n" +
-                             "Address: \(shippingAddress)\n" +
-                             "Email: \(emailAddress)"
-        OCDialog(title: "Success", message: successMessage, app: self).show()
-    } catch {
-        print("Error collecting customer information: \(error)")
-    }
+    // Show the dialog for customer to review and confirm their input
+    customerInfoDialog.show()
+
+    // Wait for user to interact with the dialog and complete input
+    //try customerInfoDialog.waitForUserInput() // Add a method to handle this
+
+    // Store valid customer information after user confirms the dialog
+    self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+
+    // Inform the user that the information has been saved successfully
+    OCDialog(title: "Success", message: "Customer information saved successfully!", app: self).show()
 }
 
 /// Collect a field from the user with optional validation
 func collectField(dialog: OCDialog, hint: String, key: String, validation: ((String) -> Bool)? = nil) throws -> String {
     let field = OCTextField(hint: hint)
     try dialog.addField(key: key, field: field)
-    
-    // Show the dialog to collect user input
-    dialog.show() // This should wait for user input
-    
-    // Assuming dialog has a method to get the input after showing
- //   let userInput = dialog.getInput(forKey: key)
-    
-   // if let validation = validation, !validation(userInput) {
-        throw NSError(domain: "InvalidInput", code: 1, userInfo: nil)
+
+    // Wait for user input (simulated or actual event-driven)
+    //let input = field.getInputFromUser() // Simulate this with a function or real-time event
+
+
+    let input = field.text
+
+    if let validate = validation, !validate(input) {
+        throw NSError(domain: "InputError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid input for \(key)"])
     }
-    
-    //return userInput
+
+    return input
 }
 
 
