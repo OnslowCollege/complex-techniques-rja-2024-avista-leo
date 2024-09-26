@@ -236,7 +236,7 @@ html {
     display: grid !important;
     flex-direction: none !important;
     align-items: start !important;
-    height: 100%;
+    height: 750px;
 }
 
 body> :nth-of-type(2) {
