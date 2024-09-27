@@ -250,74 +250,12 @@ struct userOrderHistory : CustomStringConvertible {
     }
 }
 
-/// Struct to hold the customer's details
+/// struct to hold the customer's details
 struct CustomerInfo: Codable {
     let name: String
     let shippingAddress: String
     let emailAddress: String
     let creditCardDetails: String
-
-    /// Store customer information in txt file (customerInfo.txt)
-    func storeCustomerInfo(app: OCApp) throws {
-        let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)
-        func onConfirm(_ function: @escaping (any OCControlClickable) -> (Void)) throws {
-            let name = try collectName(dialog: customerInfoDialog)
-            let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
-            let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
-            let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
-            customerInfoDialog.show()
-            let customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
-
-            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
-            print("Customer information saved to CSV file successfully.")
-        }
-    }
-
-    /// Save customer information to CSV file
-    func saveCustomerInfoToCSV(customerInfo: CustomerInfo, fileName: String) throws {
-        let fileURL = URL(fileURLWithPath: "customerInfo.txt")
-        let header = "Name, Shipping Address, Email Address, Credit Card Details\n"
-        let customerData = "\(customerInfo.name),\(customerInfo.shippingAddress),\(customerInfo.emailAddress),\(customerInfo.creditCardDetails)\n"
-        
-        if !FileManager.default.fileExists(atPath: "customerInfo.txt") {
-            try header.write(to: fileURL, atomically: true, encoding: .utf8)
-        }
-
-        let fileHandle = try FileHandle(forWritingTo: fileURL)
-        fileHandle.seekToEndOfFile()
-        if let data = customerData.data(using: .utf8) {
-            fileHandle.write(data)
-        }
-        fileHandle.closeFile()
-    }
-
-    /// Collect the customer's name
-    func collectName(dialog: OCDialog) throws -> String {
-        let nameField = OCTextField(hint: "Please enter your name:")
-        try dialog.addField(key: "name", field: nameField)
-        return nameField.text
-    }
-
-    /// Collect the customer's shipping address
-    func collectShippingAddress(dialog: OCDialog) throws -> String {
-        let addressField = OCTextField(hint: "Please enter your shipping address:")
-        try dialog.addField(key: "address", field: addressField)
-        return addressField.text
-    }
-
-    /// Collect the customer's email address
-    func collectEmailAddress(dialog: OCDialog) throws -> String {
-        let emailField = OCTextField(hint: "Please enter your email address:")
-        try dialog.addField(key: "email", field: emailField)
-        return emailField.text
-    }
-
-    /// Collect the customer's credit card details
-    func collectCreditCardDetails(dialog: OCDialog) throws -> String {
-        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
-        try dialog.addField(key: "creditCard", field: creditCardField)
-        return creditCardField.text
-    }
 }
 
 /// start of GUI Program
@@ -345,7 +283,7 @@ class SalesWebsiteGUIProgram: OCApp {
     let orderHistoryLabel = OCLabel(text: "")
     var customerInfo: CustomerInfo?
     let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
-    
+
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
 
@@ -455,10 +393,8 @@ class SalesWebsiteGUIProgram: OCApp {
             }
             successDialog.show()
 
-            // Create an instance of CustomerInfo to collect and save customer information
-            
-            let customerInfo = CustomerInfo(name: "", shippingAddress: "", emailAddress: "", creditCardDetails: "")
-            try customerInfo.storeCustomerInfo(app: self)
+            // Collect customer information after successful order placement
+            try storeCustomerInfo()
 
             // Create new cart
             self.userCart = Cart()
@@ -468,6 +404,75 @@ class SalesWebsiteGUIProgram: OCApp {
                 OCDialog(title: "Error placing order", message: error.message, app: self).show()
             }
         }
+    }
+
+    ///Start of Store customer information OK button click
+    func onConfirm(_ function: @escaping (any OCControlClickable) -> (Void))
+    {
+        OCDialog(title: "Customer Information", message: "On Confirm", app: self).show()
+        }
+    /// End of Store customer information confirmation button click
+
+    /// Store customer information
+    func storeCustomerInfo() throws {
+        
+        // Create a dialog for customer information collection
+        let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: self)
+        customerInfoDialog.show()
+
+        // Collect each piece of customer information
+        let name = try collectName(dialog: customerInfoDialog)
+        let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
+        let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
+        let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+        
+        // Store valid customer information
+        self.customerInfo = CustomerInfo(name: name, shippingAddress: shippingAddress, emailAddress: emailAddress, creditCardDetails: creditCardDetails)
+
+        try onConfirm()
+        
+    }
+
+    /// Collect the customer's name
+    func collectName(dialog: OCDialog) throws -> String {
+        // Create a text field for name input
+        let nameField = OCTextField(hint: "Please enter your name:")
+        try dialog.addField(key: "name", field: nameField)
+        // Get the inputted name
+        let name = nameField.text
+        return name
+    }
+
+    /// Collect the customer's shipping address
+    func collectShippingAddress(dialog: OCDialog) throws -> String {
+        // Create a text field for shipping address input
+        let addressField = OCTextField(hint: "Please enter your shipping address:")
+        try dialog.addField(key: "address", field: addressField)   
+        // Get the inputted shipping address
+        let shippingAddress = addressField.text
+        return shippingAddress
+    }
+
+    /// Collect the customer's email address
+    func collectEmailAddress(dialog: OCDialog) throws -> String {
+        // Create a text field for email input
+        let emailField = OCTextField(hint: "Please enter your email address:")
+        try dialog.addField(key: "email", field: emailField)
+        
+        // Get the inputted email address
+        let emailAddress = emailField.text
+        return emailAddress
+    }
+
+    /// Collect the customer's credit card details
+    func collectCreditCardDetails(dialog: OCDialog) throws -> String {
+        // Create a text field for credit card details input
+        let creditCardField = OCTextField(hint: "Please enter your credit card details:")
+        try dialog.addField(key: "creditCard", field: creditCardField)
+
+        // Get the inputted credit card details
+        let creditCardDetails = creditCardField.text
+        return creditCardDetails
     }
 
     // Method to display order history
@@ -490,30 +495,17 @@ class SalesWebsiteGUIProgram: OCApp {
 
     /// Method to show the stored customer information when display customer info button is clicked
     func ondisplayCustomerInfoClick(button: any OCControlClickable) {
-        /// Load customer information from a CSV file using the CSVDecoder
-        func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
-            let decoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
-
-            // Read in the file content
-            guard let customerInfoText = try? String(contentsOfFile: fileName) else {
-                print("Cannot load \("customerInfo.txt")")
-                exit(0)
-            }
-
-            // Decode CSV content into an array of CustomerInfo
-            guard let customerInfoArray = try? decoder.decode([CustomerInfo].self, from: customerInfoText) else {
-                print("Cannot decode \("customerInfo.txt").")
-                exit(0)
-            }
-            return customerInfoArray
+        guard let info = customerInfo 
+        else {
+            OCDialog(title: "Error", message: "No customer information available.", app: self).show()
+            return
         }
-        /// Example usage to load customer info from file
-        do {
-            let customerInfoArray = try loadCustomerInfoFromCSV(fileName: "customerInfo.txt")
-            print(customerInfoArray) // This will print the loaded customer info
-        } catch {
-            print("Error loading customer info: \(error)")
-        }
+        let infoMessage = """
+        Name: \(info.name)
+        Shipping Address: \(info.shippingAddress)
+        Email: \(info.emailAddress)
+        """
+        OCDialog(title: "Customer Information", message: infoMessage, app: self).show()
     }
 
     /// Main method.
@@ -542,7 +534,7 @@ class SalesWebsiteGUIProgram: OCApp {
         // Set up control widths.
         self.cartListView.width = OCSize.percent(100)
         self.cartItemsVBox.width = OCSize.percent(100)
-        
+
         // Set control states.
         self.orderButton.enabled = false
 
