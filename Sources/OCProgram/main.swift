@@ -531,12 +531,8 @@ class SalesWebsiteGUIProgram: OCApp {
         
         // Display the loaded customer information
         for customerInfo in customerInfoArray {
-            print("Customer Name: \(customerInfo.name)")
-            print("Shipping Address: \(customerInfo.shippingAddress)")
-            print("Email Address: \(customerInfo.emailAddress)")
-            print("Credit Card Details: \(customerInfo.creditCardDetails)")
-            print("--------")
-        }
+            OCDialog(title: "Customer Information: ", message: "Customer Name: \(customerInfo.name), Shipping Address: \(customerInfo.shippingAddress), Email Address: \(customerInfo.creditCardDetails)", app: self).show()
+            }
         } catch {
             // Handle any errors that occur during loading
             OCDialog(title: "Customer Information: ", message: "No Customer Info to display right now", app: self).show()
