@@ -144,7 +144,7 @@ struct Cart: CustomStringConvertible {
         }
 
         let TotalString: String = String(format: "%.2f", GrandTotal)
-        return "$\(TotalString)"
+        return "Balance: $\(TotalString)"
     }
 
     /// User to add item to cart, as long as cart hasn't reached max limit
@@ -392,6 +392,10 @@ class SalesWebsiteGUIProgram: OCApp {
         self.descriptionLabel.text = item.productDescription
     }
 
+    func onCancel(_ function: @escaping (any OCControlClickable) -> (Void)) {
+        resetItemsVBox()
+    }
+
     /// Recreate items VBox when anything is added or removed.
     func resetItemsVBox() {
         // Reset GUI.
@@ -445,6 +449,10 @@ class SalesWebsiteGUIProgram: OCApp {
             if let error = error as? WebError {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
             }
+        }
+        onCancel { control in
+            // Use 'button' or 'control' as needed
+            print("Cancel action triggered for button: \(button)")
         }
     }
 
