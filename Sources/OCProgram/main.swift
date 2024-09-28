@@ -257,34 +257,31 @@ struct CustomerInfo: Codable {
     let emailAddress: String
     let creditCardDetails: String
 
-    func onConfirm(_ function: @escaping (any OCControlClickable) -> (Void)) {}
+     /// Define the onConfirm function to handle customer info collection and storage
+    func onConfirm(app: OCApp, _ function: @escaping (any OCControlClickable) -> Void) {
 
-    /// Store customer information in txt file (customerInfo.txt)
-    func storeCustomerInfo(app: OCApp) throws {
-        // Define the onConfirm closure with error handling inside the closure.
-        onConfirm { control in
-            do {
-                let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)
-                let name = try collectName(dialog: customerInfoDialog)
-                let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
-                let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
-                let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
-                customerInfoDialog.show()
+        do {
+            let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)    
+            let name = try collectName(dialog: customerInfoDialog)
+            let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
+            let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
+            let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+            
+            customerInfoDialog.show()
 
-                // Create a CustomerInfo object from the collected information
-                let customerInfo = CustomerInfo(
-                    name: name, 
-                    shippingAddress: shippingAddress, 
-                    emailAddress: emailAddress, 
-                    creditCardDetails: creditCardDetails
-                )
+            // Create a CustomerInfo object from the collected information
+            let customerInfo = CustomerInfo(
+                name: name,
+                shippingAddress: shippingAddress,
+                emailAddress: emailAddress,
+                creditCardDetails: creditCardDetails
+            )
 
-                // Save customer info to the specified CSV file
-                try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
-                print("Customer information saved to CSV file successfully.")
-            } catch {
-                print("Failed to save customer information: \(error)")
-            }
+            // Save customer info to the specified CSV file
+            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
+            print("Customer information saved to CSV file successfully.")
+        } catch {
+            print("Failed to save customer information: \(error)")
         }
     }
 
@@ -469,7 +466,7 @@ class SalesWebsiteGUIProgram: OCApp {
         }
     }
 
-     /// Method to place order and collect customer information.
+    /// Method to place order and collect customer information.
     func onOrderButtonClick(button: any OCControlClickable) {
         do {
             // Create order with customer information
@@ -487,7 +484,11 @@ class SalesWebsiteGUIProgram: OCApp {
 
             // Create an instance of CustomerInfo to collect and save customer information
             let customerInfo = CustomerInfo(name: "", shippingAddress: "", emailAddress: "", creditCardDetails: "")
-            try customerInfo.storeCustomerInfo(app: self)
+            // Call the onConfirm method to collect and save customer information after order placement
+            customerInfo.onConfirm(app: self) { control in
+                // This closure is executed when the user confirms the customer information collection
+                print("Order confirmed by the user through control: \(control)")
+            }
 
             // Create new cart
             self.userCart = Cart()
