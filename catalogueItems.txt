@@ -4,18 +4,18 @@ green socks,10.0,Classic green crew socks made from a soft durable cotton blend 
 black socks,10.0,Classic black crew socks made from a soft durable cotton blend for everyday comfort
 purple socks,10.0,Classic purple crew socks made from a soft durable cotton blend for everyday comfort
 white socks,10.0,Classic white crew socks made from a soft durable cotton blend for everyday comfort
-baby blue hoodie,50.0,Baby blue hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
-dark grey hoodie,50.0,Dark grey hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
-light grey hoodie,50.0,Light grey hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
-navy blue hoodie,50.0,Navy blue hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
-pink hoodie,50.0,Pink hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
-dark grey pants,80.0,Dark grey pants made from durable stretch fabric with a tailored fit for versatile wear
-khaki pants,80.0,khaki pants made from durable stretch fabric with a tailored fit for versatile wear
-light blue pants,80.0,Light blue pants made from durable stretch fabric with a tailored fit for versatile wear
-moss green pants,80.0,Moss green pants made from durable stretch fabric with a tailored fit for versatile wear
-light grey pants,80.0,Light grey pants made from durable stretch fabric with a tailored fit for versatile wear
-white t-shirt,30.0,White t-shirt made from soft breathable cotton with a classic fit for everyday wear
-eggshell white t-shirt,30.0,Eggshell white t-shirt made from breathable cotton with a classic fit for everyday wear
-baby blue t-shirt,30.0,Baby blue t-shirt made from soft breathable cotton with a classic fit for everyday wear
-black t-shirt,30.0,Black t-shirt made from soft breathable cotton with a classic fit for everyday wear
-dark grey t-shirt,30.0,Dark grey t-shirt made from soft breathable cotton with a classic fit for everyday wear
+Small baby blue hoodie,50.0,Baby blue hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
+Medium dark grey hoodie,50.0,Dark grey hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
+Large light grey hoodie,50.0,Light grey hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
+Small navy blue hoodie,50.0,Navy blue hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
+Medium pink hoodie,50.0,Pink hoodie made from soft cotton blend fabric featuring a cozy hood for casual comfort
+Large dark grey pants,80.0,Dark grey pants made from durable stretch fabric with a tailored fit for versatile wear
+Small khaki pants,80.0,khaki pants made from durable stretch fabric with a tailored fit for versatile wear
+Medium light blue pants,80.0,Light blue pants made from durable stretch fabric with a tailored fit for versatile wear
+Large moss green pants,80.0,Moss green pants made from durable stretch fabric with a tailored fit for versatile wear
+Small light grey pants,80.0,Light grey pants made from durable stretch fabric with a tailored fit for versatile wear
+Medium white t-shirt,30.0,White t-shirt made from soft breathable cotton with a classic fit for everyday wear
+Large eggshell white t-shirt,30.0,Eggshell white t-shirt made from breathable cotton with a classic fit for everyday wear
+Small baby blue t-shirt,30.0,Baby blue t-shirt made from soft breathable cotton with a classic fit for everyday wear
+Medium black t-shirt,30.0,Black t-shirt made from soft breathable cotton with a classic fit for everyday wear
+Large dark grey t-shirt,30.0,Dark grey t-shirt made from soft breathable cotton with a classic fit for everyday wear
