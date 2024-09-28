@@ -308,31 +308,46 @@ struct CustomerInfo: Codable {
     func onConfirm(app: OCApp, _ function: @escaping (any OCControlClickable) -> Void) {
         do {
             let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)
-            customerInfoDialog.show()
-
             let name = try collectName(dialog: customerInfoDialog)
             let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
             let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
             let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+            customerInfoDialog.show()
 
-            // Create a CustomerInfo object from the collected information
-            let customerInfo = CustomerInfo(
-                name: name,
-                shippingAddress: shippingAddress,
-                emailAddress: emailAddress,
-                creditCardDetails: creditCardDetails
-            )
+            if name.isEmpty {
+                throw WebError(message: "Name cannot be left empty.")
+            }
 
-            // Save customer info to the specified CSV file
-            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
-            print("Customer information saved to CSV file successfully.")
+            if shippingAddress.isEmpty {
+                throw WebError(message: "Shipping Address cannot be left empty for customer service purposes.")
+            }
+
+            if emailAddress.isEmpty {
+                throw WebError(message: "Email Address cannot be left empty for contact purposes.")
+            }
+
+            if creditCardDetails.isEmpty {
+                throw WebError(message: "Credit Card Details cannot be left empty for payment purposes.")
+            }
+
         } catch {
-            print("Failed to save customer information: \(error)")
         }
     }
 
     /// Load customer information from a CSV file using the CSVDecoder
     func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
+        // Create a CustomerInfo object from the collected information
+        let customerInfo = CustomerInfo(
+            name: name,
+            shippingAddress: shippingAddress,
+            emailAddress: emailAddress,
+            creditCardDetails: creditCardDetails
+        )
+
+        // Save customer info to the specified CSV file
+        try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
+        print("Customer information saved to CSV file successfully.")
+
         let decoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
         // Read in the file content
         guard let customerInfoText = try? String(contentsOfFile: "customerInfo.txt") else {
