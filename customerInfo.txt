@@ -1,1 +1,1 @@
-Name,Shipping Address,Email Address,Credit Card Details
+name,shippingAddress,emailAddress,creditCardDetails

@@ -250,7 +250,7 @@ struct userOrderHistory : CustomStringConvertible {
     }
 }
 
-/// struct to hold the customer's details
+/// Struct to hold the customer's details
 struct CustomerInfo: Codable {
     let name: String
     let shippingAddress: String
@@ -314,21 +314,10 @@ struct CustomerInfo: Codable {
     }
 
     func saveCustomerInfoToCSV(customerInfo: CustomerInfo, fileName: String) throws {
-        let fileURL = URL(fileURLWithPath: "catalogueItems.txt")  // Use the provided fileName
-        let header = "Name,Shipping Address,Email Address,Credit Card Details\n"
+        let fileURL = URL(fileURLWithPath: "customerInfo.txt")
         let customerData = "\(customerInfo.name),\(customerInfo.shippingAddress),\(customerInfo.emailAddress),\(customerInfo.creditCardDetails)\n"
 
-        // Check if the file exists, and write the header if it doesn't
-        if !FileManager.default.fileExists(atPath: fileURL.path) {
-            do {
-                try header.write(to: fileURL, atomically: true, encoding: .utf8)
-            } catch {
-            print("Failed to write header: \(error)")
-            throw error
-            }
-        }
-
-        // Append customer data to the customerInfo.txt
+         // Append customer data to the customerInfo.txt
         do {
             let fileHandle = try FileHandle(forWritingTo: fileURL)
             fileHandle.seekToEndOfFile() // Move to the end of the file
@@ -346,7 +335,7 @@ struct CustomerInfo: Codable {
     func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
         let decoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
         // Read in the file content
-        guard let customerInfoText = try? String(contentsOfFile: fileName) else {
+        guard let customerInfoText = try? String(contentsOfFile: "customerInfo.txt") else {
             print("Cannot load \("customerInfo.txt")")
             exit(0)
         }
