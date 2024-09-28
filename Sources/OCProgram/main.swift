@@ -334,8 +334,7 @@ struct CustomerInfo: Codable {
         }
     }
 
-    /// Load customer information from a CSV file using the CSVDecoder
-    func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
+    func collectCustomerInfo() {
         // Create a CustomerInfo object from the collected information
         let customerInfo = CustomerInfo(
             name: name,
@@ -345,9 +344,19 @@ struct CustomerInfo: Codable {
         )
 
         // Save customer info to the specified CSV file
-        try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
+        do {
+            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
         print("Customer information saved to CSV file successfully.")
+        }
+        
+        catch {
 
+        }
+
+    }
+
+    /// Load customer information from a CSV file using the CSVDecoder
+    func loadCustomerInfoFromCSV(fileName: String) throws -> [CustomerInfo] {
         let decoder = CSVDecoder(configuration: { $0.headerStrategy = .firstLine })
         // Read in the file content
         guard let customerInfoText = try? String(contentsOfFile: "customerInfo.txt") else {
