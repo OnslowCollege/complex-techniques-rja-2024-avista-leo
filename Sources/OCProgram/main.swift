@@ -350,6 +350,7 @@ struct CustomerInfo: Codable {
             print("Cannot load \("customerInfo.txt")")
             exit(0)
         }
+
         // Decode CSV content into an array of CustomerInfo
         guard let customerInfoArray = try? decoder.decode([CustomerInfo].self, from: customerInfoText) else {
             print("Cannot decode \("customerInfo.txt").")
@@ -549,7 +550,7 @@ class SalesWebsiteGUIProgram: OCApp {
         }
         } catch {
             // Handle any errors that occur during loading
-            print("Failed to load customer information: \(error)")
+            OCDialog(title: "Customer Information: ", message: "No Customer Info to display right now", app: self).show()
         }
     }
 

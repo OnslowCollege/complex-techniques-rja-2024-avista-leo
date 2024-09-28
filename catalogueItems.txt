@@ -19,4 +19,3 @@ eggshell white t-shirt,30.0,Eggshell white t-shirt made from breathable cotton w
 baby blue t-shirt,30.0,Baby blue t-shirt made from soft breathable cotton with a classic fit for everyday wear
 black t-shirt,30.0,Black t-shirt made from soft breathable cotton with a classic fit for everyday wear
 dark grey t-shirt,30.0,Dark grey t-shirt made from soft breathable cotton with a classic fit for everyday wear
-,,,
