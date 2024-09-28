@@ -278,33 +278,6 @@ struct CustomerInfo: Codable {
         return emailField.text
     }
 
-    /// Define the onConfirm function to handle customer info collection and storage
-    func onConfirm(app: OCApp, _ function: @escaping (any OCControlClickable) -> Void) {
-
-        do {
-            let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)
-            customerInfoDialog.show()
-
-            let name = try collectName(dialog: customerInfoDialog)
-            let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
-            let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
-            let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
-
-            // Create a CustomerInfo object from the collected information
-            let customerInfo = CustomerInfo(
-                name: name,
-                shippingAddress: shippingAddress,
-                emailAddress: emailAddress,
-                creditCardDetails: creditCardDetails
-            )
-
-            // Save customer info to the specified CSV file
-            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
-            print("Customer information saved to CSV file successfully.")
-        } catch {
-            print("Failed to save customer information: \(error)")
-        }
-    }
 
     /// Collect the customer's credit card details
     func collectCreditCardDetails(dialog: OCDialog) throws -> String {
@@ -328,6 +301,33 @@ struct CustomerInfo: Codable {
         } catch {
             print("Failed to write customer data: \(error)")
             throw error
+        }
+    }
+
+    /// Define the onConfirm function to handle customer info collection and storage
+    func onConfirm(app: OCApp, _ function: @escaping (any OCControlClickable) -> Void) {
+        do {
+            let customerInfoDialog = OCDialog(title: "Customer Information", message: "", app: app)
+            customerInfoDialog.show()
+
+            let name = try collectName(dialog: customerInfoDialog)
+            let shippingAddress = try collectShippingAddress(dialog: customerInfoDialog)
+            let emailAddress = try collectEmailAddress(dialog: customerInfoDialog)
+            let creditCardDetails = try collectCreditCardDetails(dialog: customerInfoDialog)
+
+            // Create a CustomerInfo object from the collected information
+            let customerInfo = CustomerInfo(
+                name: name,
+                shippingAddress: shippingAddress,
+                emailAddress: emailAddress,
+                creditCardDetails: creditCardDetails
+            )
+
+            // Save customer info to the specified CSV file
+            try saveCustomerInfoToCSV(customerInfo: customerInfo, fileName: "customerInfo.txt")
+            print("Customer information saved to CSV file successfully.")
+        } catch {
+            print("Failed to save customer information: \(error)")
         }
     }
 
