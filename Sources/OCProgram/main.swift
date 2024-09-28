@@ -494,10 +494,12 @@ class SalesWebsiteGUIProgram: OCApp {
 
             // Create an instance of CustomerInfo to collect and save customer information
             let customerInfo = CustomerInfo(name: "", shippingAddress: "", emailAddress: "", creditCardDetails: "")
+            print(customerInfo,":1")
             // Call the onConfirm method to collect and save customer information after order placement
             customerInfo.onConfirm(app: self) { control in
                 // This closure is executed when the user confirms the customer information collection
                 print("Order confirmed by the user through control: \(control)")
+                print(customerInfo,":2")
             }
 
             // Create new cart
