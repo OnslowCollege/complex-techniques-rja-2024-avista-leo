@@ -313,21 +313,33 @@ struct CustomerInfo: Codable {
         return creditCardField.text
     }
 
-    /// Save customer information to CSV file
     func saveCustomerInfoToCSV(customerInfo: CustomerInfo, fileName: String) throws {
-        let fileURL = URL(fileURLWithPath: "customerInfo.txt")
-        let header = "Name, Shipping Address, Email Address, Credit Card Details\n"
+        let fileURL = URL(fileURLWithPath: "catalogueItems.txt")  // Use the provided fileName
+        let header = "Name,Shipping Address,Email Address,Credit Card Details\n"
         let customerData = "\(customerInfo.name),\(customerInfo.shippingAddress),\(customerInfo.emailAddress),\(customerInfo.creditCardDetails)\n"
-        
-        if !FileManager.default.fileExists(atPath: "customerInfo.txt") {
-            try header.write(to: fileURL, atomically: true, encoding: .utf8)
+
+        // Check if the file exists, and write the header if it doesn't
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
+            do {
+                try header.write(to: fileURL, atomically: true, encoding: .utf8)
+            } catch {
+            print("Failed to write header: \(error)")
+            throw error
+            }
         }
-        let fileHandle = try FileHandle(forWritingTo: fileURL)
-        fileHandle.seekToEndOfFile()
-        if let data = customerData.data(using: .utf8) {
-            fileHandle.write(data)
+
+        // Append customer data to the customerInfo.txt
+        do {
+            let fileHandle = try FileHandle(forWritingTo: fileURL)
+            fileHandle.seekToEndOfFile() // Move to the end of the file
+            if let data = customerData.data(using: .utf8) {
+                fileHandle.write(data) // Write customer data
+            }
+            fileHandle.closeFile() // Close the file
+        } catch {
+            print("Failed to write customer data: \(error)")
+            throw error
         }
-        fileHandle.closeFile()
     }
 
     /// Load customer information from a CSV file using the CSVDecoder
