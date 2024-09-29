@@ -1,6 +1,7 @@
 // Avista + Leo Inc.
 //
 // Founded by Avista Goswami + Leo Evans
+// Attention: Program has elements of referenceprogram.swift
 // Founded on 23/06/2024
 
 import Foundation
@@ -334,7 +335,7 @@ struct CustomerInfo: Codable {
         }
     }
 
-    func collectCustomerInfo() {
+    func processCustomerInfo() {
         // Create a CustomerInfo object from the collected information
         let customerInfo = CustomerInfo(
             name: name,
@@ -352,7 +353,6 @@ struct CustomerInfo: Codable {
         catch {
 
         }
-
     }
 
     /// Load customer information from a CSV file using the CSVDecoder
@@ -398,6 +398,8 @@ class SalesWebsiteGUIProgram: OCApp {
     let orderHistoryLabel = OCLabel(text: "")
     var customerInfo: CustomerInfo?
     let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
+    let warningLabel = OCLabel(text: "Attention! Credit Card Details are only collected for payment purposes")
+    let warningLabel2 = OCLabel(text: "Beware! Our programmers couldn't get any of the Cancel Buttons in this program working. Please think twice before making a decision.")
     
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
@@ -414,10 +416,6 @@ class SalesWebsiteGUIProgram: OCApp {
         // Otherwise, update labels.
         self.priceTag.text = item.priceDescription
         self.descriptionLabel.text = item.productDescription
-    }
-
-    func onCancel(_ function: @escaping (any OCControlClickable) -> (Void)) {
-        resetItemsVBox()
     }
 
     /// Recreate items VBox when anything is added or removed.
@@ -474,21 +472,27 @@ class SalesWebsiteGUIProgram: OCApp {
                 OCDialog(title: "Add error", message: error.message, app: self).show()
             }
         }
-        onCancel { control in
-            // Use 'button' or 'control' as needed
-            print("Cancel action triggered for button: \(button)")
-        }
     }
 
     /// Remove an item from user's cart.
     func onRemoveButtonClick(button: any OCControlClickable) {
         do {
             let button = button as! OCButton
+            // Check a selection has been made by user.
+            guard let selectedIndex = self.cartListView.selectedIndex else {
+                // If an item hasn't been selected by user, do nothing.
+                print("No item selected.")
+                return
+            }
+            
             let index = self.totalRemoveButtons.firstIndex(where: { $0.pythonObject == button.pythonObject })!
+            let itemName: String = self.catalogue!.availableItems[selectedIndex].itemName
+
             try self.userCart.removeItem(RemoveItemName: self.userCart.userItems[index].itemName)
 
             // Remove item from GUI.
             self.resetItemsVBox()
+            OCDialog(title: "Success", message: "Removed \(itemName)!", app: self).show()
 
             // Adjust cart's total price to GUI after removing item.
             self.cartPriceLabel.text = self.userCart.totalPriceString
@@ -516,15 +520,15 @@ class SalesWebsiteGUIProgram: OCApp {
             }
             successDialog.show()
 
-            // Create an instance of CustomerInfo to collect and save customer information
             let customerInfo = CustomerInfo(name: "", shippingAddress: "", emailAddress: "", creditCardDetails: "")
-            print(customerInfo,":1")
-            // Call the onConfirm method to collect and save customer information after order placement
+            // Call the onConfirm method to collect information after order placement
             customerInfo.onConfirm(app: self) { control in
                 // This closure is executed when the user confirms the customer information collection
                 print("Order confirmed by the user through control: \(control)")
-                print(customerInfo,":2")
             }
+
+            // Call the collectCustomerInfo method to process + save information after order placement
+            customerInfo.processCustomerInfo()
 
             // Create new cart
             self.userCart = Cart()
@@ -659,7 +663,7 @@ class SalesWebsiteGUIProgram: OCApp {
         let menuVBox = OCVBox(controls: [self.cartListView, self.descriptionLabel, self.cartPriceLabel, self.addToCartButton])
         let cartVBox = OCVBox(controls: [self.cartItemsVBox, self.cartPriceLabel, self.orderButton, self.showOrderHistoryButton, self.displayCustomerInfoButton])
         let menuHBox = OCHBox(controls: [menuVBox, cartVBox])
-        return OCVBox(controls: [menuHBox, gridLayout])
+        return OCVBox(controls: [warningLabel, warningLabel2, menuHBox, gridLayout])
     }
 }
 SalesWebsiteGUIProgram().start()
