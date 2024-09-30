@@ -292,6 +292,7 @@ struct CustomerInfo: Codable {
         let customerData = "\(customerInfo.name),\(customerInfo.shippingAddress),\(customerInfo.emailAddress),\(customerInfo.creditCardDetails)\n"
 
          // Append customer data to the customerInfo.txt
+        // Code Learnt from Apple Swift Documentation
         do {
             let fileHandle = try FileHandle(forWritingTo: fileURL)
             fileHandle.seekToEndOfFile() // Move to the end of the file
