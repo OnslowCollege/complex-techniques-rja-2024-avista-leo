@@ -398,8 +398,8 @@ class SalesWebsiteGUIProgram: OCApp {
     let orderHistoryLabel = OCLabel(text: "")
     var customerInfo: CustomerInfo?
     let displayCustomerInfoButton = OCButton(text: "Display Customer Info")
-    let warningLabel = OCLabel(text: "Attention! Credit Card Details are only collected for payment purposes")
-    let warningLabel2 = OCLabel(text: "Beware! Our programmers couldn't get any of the Cancel Buttons in this program working. Please think twice before making a decision.")
+    let warningLabel = OCLabel(text: "Attention! We only collect your data for Communication and Payment Purpose. This data is stored in a CSV file that only me and Leo have access to. Don't worry, you're data is safe as we are not going to sell your data to anyone!")
+    let warningLabel2 = OCLabel(text: "Beware! Our programmer couldn't get any of the Cancel Buttons in this program working. Please think twice before making a decision.")
     
     // Track remove buttons.
     var totalRemoveButtons: [OCButton] = []
